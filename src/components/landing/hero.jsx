@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import shaku from '../../assets/shaku_bhai.jpg'
 
 export default function Hero() {
   return (
@@ -46,7 +47,8 @@ export default function Hero() {
           <div className="relative hidden justify-center lg:flex">
 
             <img
-              src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80"
+            sr
+              src={shaku}
               alt="Landscape"
               className="h-117.5 w-87.5 rounded-[34px] object-cover shadow-[0_25px_60px_rgba(0,0,0,0.35)] ring-1 ring-white/10"
             />
