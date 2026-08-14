@@ -1,9 +1,9 @@
 import { RotateCcw } from "lucide-react"
+import Logo from "../layout/Logo"
 
 export default function ChatBubble({ message, onRegenerate }) {
   const { role, content, isTemplate, canRegenerate } = message
 
-  // A clicked template button (e.g. "Grammar Errors") — small chip, not a full bubble
   if (role === "user" && isTemplate) {
     return (
       <div className="flex justify-end">
@@ -14,7 +14,6 @@ export default function ChatBubble({ message, onRegenerate }) {
     )
   }
 
-  // The user's typed description
   if (role === "user") {
     return (
       <div className="flex justify-end">
@@ -25,12 +24,13 @@ export default function ChatBubble({ message, onRegenerate }) {
     )
   }
 
-  // AI response
   return (
-    <div className="flex justify-start">
+    <div className="flex justify-start gap-2.5">
+      <div className="shrink-0 mt-1">
+        <Logo size={40} />
+      </div>
       <div className="max-w-[75%] rounded-2xl rounded-bl-md border border-slate-200/60 dark:border-white/10 bg-white/60 dark:bg-white/5 backdrop-blur-xl px-4 py-3 text-[15px] leading-6 text-slate-800 dark:text-slate-200">
         {content}
-
         {canRegenerate && (
           <button
             onClick={onRegenerate}
