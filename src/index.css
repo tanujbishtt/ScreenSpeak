@@ -1,6 +1,21 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
+
+@theme {
+  --color-primary: #2584a7;
+  --color-primary-hover: #24e5d2;
+  --color-canvas: #fff8e9;
+  --color-primary-foreground: #ffffff;
+}
+
+.dark {
+  --color-primary: #affdf0;
+  --color-primary-hover: #beef8d;
+  --color-canvas: #393a4f;
+  --color-primary-foreground: #1e293b;
+}
+
 html {
   scroll-behavior: smooth;
   scrollbar-width: none;

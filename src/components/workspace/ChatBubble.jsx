@@ -7,7 +7,7 @@ export default function ChatBubble({ message, onRegenerate }) {
   if (role === "user" && isTemplate) {
     return (
       <div className="flex justify-end">
-        <div className="rounded-full bg-blue-600/10 dark:bg-blue-400/10 border border-blue-600/20 dark:border-blue-400/20 px-4 py-1.5 text-sm font-medium text-blue-600 dark:text-blue-400">
+        <div className="rounded-full bg-primary/10 /10 border border-primary/20 /20 px-4 py-1.5 text-sm font-medium text-primary ">
           {content}
         </div>
       </div>
@@ -17,7 +17,7 @@ export default function ChatBubble({ message, onRegenerate }) {
   if (role === "user") {
     return (
       <div className="flex justify-end">
-        <div className="max-w-[75%] rounded-2xl rounded-br-md bg-blue-600 text-white px-4 py-3 text-[15px] leading-6">
+        <div className="max-w-[75%] rounded-2xl rounded-br-md bg-primary text-primary-foreground px-4 py-3 text-[15px] leading-6">
           {content}
         </div>
       </div>
@@ -34,7 +34,7 @@ export default function ChatBubble({ message, onRegenerate }) {
         {canRegenerate && (
           <button
             onClick={onRegenerate}
-            className="mt-2 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition"
+            className="mt-2 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-primary-foreground transition"
           >
             <RotateCcw size={12} />
             Try another

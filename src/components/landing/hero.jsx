@@ -19,7 +19,7 @@ export default function Hero() {
 
             <h1 className="text-5xl font-bold leading-tight text-slate-900 dark:text-white lg:text-6xl">
               Stop translating.
-              <span className="mt-1 block text-blue-600 dark:text-blue-400">
+              <span className="mt-1 block text-primary ">
                 Start thinking in English.
               </span>
             </h1>
@@ -31,12 +31,12 @@ export default function Hero() {
             <div className="mt-10 flex items-center gap-4">
               <Link
                 to="/workspace"
-                className="rounded-2xl bg-blue-600 px-8 py-3.5 font-semibold text-white shadow-lg shadow-blue-600/30 transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-500"
+                className="rounded-2xl bg-primary px-8 py-3.5 font-semibold text-primary-foreground shadow-lg shadow-primary/30 transition-all duration-300 hover:-translate-y-0.5 "
               >
                 Give it a Shot
               </Link>
 
-              <button className="rounded-2xl border border-blue-600 px-8 py-3.5 font-semibold text-blue-600 transition-colors hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-950/40">
+              <button className="rounded-2xl border border-primary px-8 py-3.5 font-semibold text-primary transition-colors hover:bg-blue-50   dark:hover:bg-blue-950/40">
                 Sign In
               </button>
             </div>

@@ -94,13 +94,13 @@ export default function ChatInput({ onSubmit }) {
             items-center
             justify-center
             rounded-full
-            bg-blue-600
-            text-white
+            bg-primary
+            text-primary-foreground
             shadow-lg
             transition-all
             duration-300
             hover:scale-105
-            hover:bg-blue-500
+            
             active:scale-95
 
             ${

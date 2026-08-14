@@ -38,11 +38,11 @@ export default function HowItWorks() {
               key={step.title}
               className="relative rounded-2xl border border-slate-200 dark:border-white/10 bg-white/60 dark:bg-white/5 backdrop-blur-md p-6"
             >
-              <div className="absolute -top-3 -left-3 h-8 w-8 rounded-full bg-blue-600 text-white text-sm font-bold flex items-center justify-center">
+              <div className="absolute -top-3 -left-3 h-8 w-8 rounded-full bg-primary text-primary-foreground text-sm font-bold flex items-center justify-center">
                 {i + 1}
               </div>
-              <div className="h-11 w-11 rounded-xl bg-blue-600/10 dark:bg-blue-400/10 flex items-center justify-center mb-4">
-                <Icon size={22} className="text-blue-600 dark:text-blue-400" />
+              <div className="h-11 w-11 rounded-xl bg-primary/10 /10 flex items-center justify-center mb-4">
+                <Icon size={22} className="text-primary " />
               </div>
               <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-1">
                 {step.title}

@@ -85,7 +85,7 @@ export default function Features() {
                 className={`h-10 w-10 rounded-xl flex items-center justify-center mb-4 ${
                   feature.comingSoon
                     ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
-                    : "bg-blue-600/10 text-blue-600 dark:text-blue-400"
+                    : "bg-primary/10 text-primary "
                 }`}
               >
                 <Icon size={20} />
