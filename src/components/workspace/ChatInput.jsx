@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUp } from "lucide-react";
 
 export default function ChatInput({ onSubmit }) {
@@ -7,7 +7,7 @@ export default function ChatInput({ onSubmit }) {
 
   const textareaRef = useRef(null);
 
-  // Automatically grow textarea with content
+  // Grow with content while keeping a maximum height.
   useEffect(() => {
     const textarea = textareaRef.current;
 
@@ -18,16 +18,18 @@ export default function ChatInput({ onSubmit }) {
   }, [value]);
 
   function submit() {
-    if (!value.trim()) return;
+    const text = value.trim();
 
-    onSubmit(value.trim());
+    if (!text) return;
+
+    onSubmit(text);
     setValue("");
     setIsFocused(false);
   }
 
-  function handleKeyDown(e) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
+  function handleKeyDown(event) {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
       submit();
     }
   }
@@ -36,101 +38,78 @@ export default function ChatInput({ onSubmit }) {
     <div
       className={`
         mx-auto
-        transition-all
-        duration-500
+        transition-all duration-500
         ease-[cubic-bezier(.22,1,.36,1)]
         ${isFocused ? "max-w-5xl" : "max-w-md"}
       `}
     >
       <div
         className={`
-          relative
-          flex
-          items-end
-          rounded-full
-          border
-          transition-all
-          duration-500
-          backdrop-blur-3xl
-          bg-white/60
-          dark:bg-white/5
+          relative flex items-end
+          rounded-full border
           border-slate-200/60
-          dark:border-white/10
+          bg-white/60
+          backdrop-blur-3xl
           shadow-[0_10px_35px_rgba(0,0,0,0.10)]
-          dark:shadow-[0_10px_35px_rgba(0,0,0,0.45)]
+          transition-all duration-500
           hover:shadow-[0_15px_45px_rgba(0,0,0,0.15)]
-
+          dark:border-white/10
+          dark:bg-white/5
+          dark:shadow-[0_10px_35px_rgba(0,0,0,0.45)]
           ${isFocused ? "rounded-[28px]" : ""}
         `}
       >
-        {/* Input */}
         <textarea
           ref={textareaRef}
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(event) => setValue(event.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => {
-            if (!value.trim()) {
-              setIsFocused(false);
-            }
+            if (!value.trim()) setIsFocused(false);
           }}
           onKeyDown={handleKeyDown}
           rows={1}
-          placeholder="    Describe what you see..."
+          placeholder="Describe what you see..."
           className="
-            w-full
-            resize-none
+            w-full resize-none
             overflow-y-auto
             bg-transparent
-            px-4
-            py-5
-            text-[15px]
-            leading-6
+            px-4 py-5
+            text-[15px] leading-6
             text-slate-900
-            dark:text-white
-            placeholder:text-slate-400
-            dark:placeholder:text-slate-500
             outline-none
-
+            placeholder:text-slate-400
             scrollbar-none
             [&::-webkit-scrollbar]:hidden
+            dark:text-white
+            dark:placeholder:text-slate-500
           "
-          style={{
-            maxHeight: "180px",
-          }}
+          style={{ maxHeight: "180px" }}
         />
 
-        {/* Send Button */}
         <button
           onClick={submit}
           disabled={!value.trim()}
           className={`
-            mb-3
-            mr-5
-            flex
-            h-10
-            w-10
-            shrink-0
-            items-center
-            justify-center
+            mb-3 mr-5
+            flex h-10 w-10 shrink-0
+            items-center justify-center
             rounded-full
             bg-primary
             text-primary-foreground
             shadow-lg
-            transition-all
-            duration-300
+            transition-all duration-300
             hover:scale-105
             active:scale-95
-
+            disabled:pointer-events-none
+            disabled:opacity-50
             ${
               isFocused || value
                 ? "translate-x-0 opacity-100"
                 : "pointer-events-none translate-x-2 opacity-0"
             }
-
-            disabled:pointer-events-none
-            disabled:opacity-50
           `}
+          aria-label="Send message"
         >
           <ArrowUp size={18} />
         </button>

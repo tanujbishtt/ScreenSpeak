@@ -1,17 +1,14 @@
-import { useState, useRef, useEffect } from "react";
-import { BookOpen, Lightbulb, SkipForward, Sun, Moon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { BookOpen, Lightbulb, Moon, SkipForward, Sun } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { images } from "../data/images";
 import { promptTemplates } from "../data/promptTemplates";
-
-import ChatInput from "../components/workspace/ChatInput";
 import ChatBubble from "../components/workspace/ChatBubble";
+import ChatInput from "../components/workspace/ChatInput";
 import SessionDropdown from "../components/workspace/SessionDropdown";
-
 import Logo from "../components/layout/Logo";
 import { GithubIcon } from "../components/icons/BrandIcons";
-
 import { useTheme } from "../context/ThemeContext";
 
 function getRandomImage() {
@@ -55,17 +52,15 @@ export default function WorkspacePage() {
   const bottomRef = useRef(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({
-      behavior: "smooth",
-    });
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  function addMessage(msg) {
+  function addMessage(message) {
     setMessages((prev) => [
       ...prev,
       {
         id: Date.now() + Math.random(),
-        ...msg,
+        ...message,
       },
     ]);
   }
@@ -85,15 +80,17 @@ export default function WorkspacePage() {
           content: getMockResponse("description"),
         });
       }, 800);
-    } else {
-      setTimeout(() => {
-        addMessage({
-          role: "assistant",
-          content: getMockResponse("followup"),
-          canRegenerate: true,
-        });
-      }, 800);
+
+      return;
     }
+
+    setTimeout(() => {
+      addMessage({
+        role: "assistant",
+        content: getMockResponse("followup"),
+        canRegenerate: true,
+      });
+    }, 800);
   }
 
   function handleTemplateClick(template) {
@@ -128,65 +125,35 @@ export default function WorkspacePage() {
 
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden bg-canvas">
-      {/* ================= TOOLBAR ================= */}
+      {/* Toolbar */}
       <div
         className="
-    relative
-    z-50
-    flex h-14 shrink-0 items-center justify-between
-    border-b border-border
-    bg-canvas/85
-    px-4
-    backdrop-blur-xl
-  "
+          relative z-50 flex h-14 shrink-0 items-center justify-between
+          border-b border-border bg-canvas/85 px-4 backdrop-blur-xl
+        "
       >
-        {/* Left side */}
         <div className="flex items-center gap-3">
-          {/* Logo → Home */}
           <Link
             to="/"
-            className="
-              flex
-              items-center
-              rounded-lg
-              transition-opacity
-              hover:opacity-80
-            "
+            className="flex items-center rounded-lg transition-opacity hover:opacity-80"
             aria-label="Go to home"
           >
             <Logo size={22} />
           </Link>
 
-          {/* Session dropdown */}
           <SessionDropdown />
         </div>
 
-        {/* Right side */}
         <div className="flex items-center gap-3">
-          {/* GitHub */}
           <a
             href="https://github.com/tanujbishtt/ScreenSpeak"
             target="_blank"
             rel="noopener noreferrer"
             className="
-              flex
-              items-center
-              gap-1.5
-              rounded-full
-              border
-              border-border
-              bg-surface/60
-              px-3
-              py-1.5
-              text-sm
-              text-slate-600
-              transition
-              hover:border-slate-400
-              hover:bg-surface
-
-              dark:border-white/10
-              dark:bg-white/5
-              dark:text-slate-300
+              flex items-center gap-1.5 rounded-full border border-border
+              bg-surface/60 px-3 py-1.5 text-sm text-slate-600 transition
+              hover:border-slate-400 hover:bg-surface
+              dark:border-white/10 dark:bg-white/5 dark:text-slate-300
               dark:hover:bg-white/10
             "
           >
@@ -194,15 +161,11 @@ export default function WorkspacePage() {
             Star
           </a>
 
-          {/* Theme toggle */}
           <button
             onClick={toggleTheme}
             className="
-              text-slate-600
-              transition
-              hover:text-slate-900
-              dark:text-slate-300
-              dark:hover:text-white
+              text-slate-600 transition hover:text-slate-900
+              dark:text-slate-300 dark:hover:text-white
             "
             aria-label="Toggle theme"
           >
@@ -211,74 +174,43 @@ export default function WorkspacePage() {
         </div>
       </div>
 
-      {/* ================= SPLIT PANELS ================= */}
+      {/* Workspace panels */}
       <div className="flex min-h-0 flex-1">
-        {/* ================= LEFT PANEL ================= */}
+        {/* Image panel */}
         <div
           className="
-            flex
-            min-h-0
-            w-1/2
-            flex-col
-            border-r
-            border-border
+            flex min-h-0 w-1/2 flex-col border-r border-border
             bg-surface-muted/70
           "
         >
           <div className="no-scrollbar flex-1 overflow-y-auto p-5">
-            {/* Image */}
             <div className="relative mb-4">
               <img
                 src={currentImage.url}
                 alt="Describe what's happening in this scene"
                 className="
-                  h-72
-                  w-full
-                  rounded-2xl
-                  object-cover
+                  h-72 w-full rounded-2xl object-cover
                   shadow-[0_8px_25px_rgba(50,40,20,0.10)]
                   dark:shadow-[0_8px_25px_rgba(0,0,0,0.25)]
                 "
               />
 
-              {/* Category */}
               <span
                 className="
-                  absolute
-                  left-3
-                  top-3
-                  rounded-full
-                  bg-slate-900/65
-                  px-3
-                  py-1
-                  text-xs
-                  font-medium
-                  capitalize
-                  text-white
+                  absolute left-3 top-3 rounded-full bg-slate-900/65
+                  px-3 py-1 text-xs font-medium capitalize text-white
                   backdrop-blur-md
                 "
               >
                 {currentImage.category}
               </span>
 
-              {/* Next image */}
               <button
                 onClick={handleNextImage}
                 className="
-                  absolute
-                  right-3
-                  top-3
-                  flex
-                  h-8
-                  w-8
-                  items-center
-                  justify-center
-                  rounded-full
-                  bg-slate-900/65
-                  text-white
-                  backdrop-blur-md
-                  transition
-                  hover:bg-slate-900/85
+                  absolute right-3 top-3 flex h-8 w-8 items-center
+                  justify-center rounded-full bg-slate-900/65 text-white
+                  backdrop-blur-md transition hover:bg-slate-900/85
                 "
                 aria-label="Skip to next image"
               >
@@ -286,17 +218,8 @@ export default function WorkspacePage() {
               </button>
             </div>
 
-            {/* Tabs */}
-            <div
-              className="
-                mb-4
-                flex
-                items-center
-                gap-4
-                border-b
-                border-border
-              "
-            >
+            {/* Learning tools */}
+            <div className="mb-4 flex items-center gap-4 border-b border-border">
               <button
                 onClick={() =>
                   setActiveTab(activeTab === "vocab" ? null : "vocab")
@@ -311,7 +234,9 @@ export default function WorkspacePage() {
 
               <button
                 onClick={() =>
-                  setActiveTab(activeTab === "solution" ? null : "solution")
+                  setActiveTab(
+                    activeTab === "solution" ? null : "solution"
+                  )
                 }
                 className={tabButtonClass("solution")}
               >
@@ -322,32 +247,29 @@ export default function WorkspacePage() {
               </button>
             </div>
 
-            {/* Vocabulary */}
             {activeTab === "vocab" && (
               <div className="mb-4 flex flex-col gap-2">
-                {currentImage.vocab.map((v) => (
-                  <div key={v.word} className="text-sm">
+                {currentImage.vocab.map((vocab) => (
+                  <div key={vocab.word} className="text-sm">
                     <span className="font-semibold text-slate-900 dark:text-white">
-                      {v.word}
+                      {vocab.word}
                     </span>
 
                     <span className="text-slate-500 dark:text-slate-400">
                       {" "}
-                      — {v.meaning}
+                      — {vocab.meaning}
                     </span>
                   </div>
                 ))}
               </div>
             )}
 
-            {/* Solution */}
             {activeTab === "solution" && (
               <div className="mb-4 text-sm text-slate-700 dark:text-slate-300">
                 {currentImage.solution}
               </div>
             )}
 
-            {/* Prompt templates */}
             {hasDescribed && (
               <div className="flex flex-wrap gap-2 pt-2">
                 {promptTemplates.map((template) => (
@@ -355,24 +277,11 @@ export default function WorkspacePage() {
                     key={template.id}
                     onClick={() => handleTemplateClick(template)}
                     className="
-                      rounded-full
-                      border
-                      border-border
-                      bg-surface/70
-                      px-4
-                      py-1.5
-                      text-sm
-                      font-medium
-                      text-slate-600
-                      shadow-sm
-                      transition-all
-                      hover:scale-105
-                      hover:border-slate-400
-                      hover:bg-surface
-
-                      dark:bg-white/5
-                      dark:text-slate-300
-                      dark:border-white/10
+                      rounded-full border border-border bg-surface/70
+                      px-4 py-1.5 text-sm font-medium text-slate-600
+                      shadow-sm transition-all hover:scale-105
+                      hover:border-slate-400 hover:bg-surface
+                      dark:border-white/10 dark:bg-white/5 dark:text-slate-300
                       dark:hover:bg-white/10
                     "
                   >
@@ -384,45 +293,22 @@ export default function WorkspacePage() {
           </div>
         </div>
 
-        {/* ================= RIGHT PANEL ================= */}
-        <div
-          className="
-            flex
-            min-h-0
-            w-1/2
-            flex-col
-            bg-surface/70
-          "
-        >
-          {/* Chat header */}
+        {/* Chat panel */}
+        <div className="flex min-h-0 w-1/2 flex-col bg-surface/70">
           <div
             className="
-              border-b
-              border-border
-              bg-surface/50
-              px-5
-              py-2.5
-              text-sm
-              font-medium
-              text-slate-700
-              dark:text-slate-300
+              border-b border-border bg-surface/50 px-5 py-2.5
+              text-sm font-medium text-slate-700 dark:text-slate-300
             "
           >
             Chat
           </div>
 
-          {/* Chat content */}
           {messages.length === 0 ? (
             <div
               className="
-                flex
-                min-h-0
-                flex-1
-                flex-col
-                items-center
-                justify-center
-                px-6
-                text-center
+                flex min-h-0 flex-1 flex-col items-center justify-center
+                px-6 text-center
               "
             >
               <Logo size={28} />
@@ -435,22 +321,17 @@ export default function WorkspacePage() {
           ) : (
             <div
               className="
-                no-scrollbar
-                flex
-                min-h-0
-                flex-1
-                flex-col
-                justify-end
-                gap-4
-                overflow-y-auto
-                p-5
+                no-scrollbar flex min-h-0 flex-1 flex-col justify-end
+                gap-4 overflow-y-auto p-5
               "
             >
-              {messages.map((msg) => (
+              {messages.map((message) => (
                 <ChatBubble
-                  key={msg.id}
-                  message={msg}
-                  onRegenerate={() => console.log("regenerate:", msg.content)}
+                  key={message.id}
+                  message={message}
+                  onRegenerate={() =>
+                    console.log("regenerate:", message.content)
+                  }
                 />
               ))}
 
@@ -458,14 +339,9 @@ export default function WorkspacePage() {
             </div>
           )}
 
-          {/* Chat input */}
           <div
             className="
-              border-t
-              border-border
-              bg-canvas/55
-              p-4
-              backdrop-blur-xl
+              border-t border-border bg-canvas/55 p-4 backdrop-blur-xl
             "
           >
             <ChatInput onSubmit={handleUserMessage} />
