@@ -41,8 +41,8 @@ export default function HowItWorks() {
               <div className="absolute -top-3 -left-3 h-8 w-8 rounded-full bg-primary text-primary-foreground text-sm font-bold flex items-center justify-center">
                 {i + 1}
               </div>
-              <div className="h-11 w-11 rounded-xl bg-primary/10 /10 flex items-center justify-center mb-4">
-                <Icon size={22} className="text-primary " />
+              <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                <Icon size={22} className="text-primary" />
               </div>
               <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-1">
                 {step.title}

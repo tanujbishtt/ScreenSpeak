@@ -5,7 +5,7 @@ export default function Hero() {
   return (
     <section className="relative overflow-hidden">
       {/* Background Glow */}
-      <div className="absolute right-20 top-24 h-105 w-105 rounded-full bg-blue-500/15 blur-[130px]" />
+      <div className="absolute right-20 top-24 h-105 w-105 rounded-full bg-primary/15 blur-[130px]" />
 
       <div className="mx-auto max-w-7xl px-6 pt-24 pb-24">
         <div className="grid items-center gap-8 lg:grid-cols-2">
@@ -36,7 +36,7 @@ export default function Hero() {
                 Give it a Shot
               </Link>
 
-              <button className="rounded-2xl border border-primary px-8 py-3.5 font-semibold text-primary transition-colors hover:bg-blue-50   dark:hover:bg-blue-950/40">
+              <button className="rounded-2xl border border-primary px-8 py-3.5 font-semibold text-primary transition-colors hover:bg-primary/10">
                 Sign In
               </button>
             </div>
@@ -47,7 +47,6 @@ export default function Hero() {
           <div className="relative hidden justify-center lg:flex">
 
             <img
-            sr
               src={shaku}
               alt="Landscape"
               className="h-117.5 w-87.5 rounded-[34px] object-cover shadow-[0_25px_60px_rgba(0,0,0,0.35)] ring-1 ring-white/10"
