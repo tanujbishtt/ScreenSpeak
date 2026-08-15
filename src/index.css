@@ -1,19 +1,45 @@
 @import "tailwindcss";
+
 @custom-variant dark (&:where(.dark, .dark *));
 
-
 @theme {
+  /* Core */
   --color-primary: #2584a7;
   --color-primary-hover: #24e5d2;
   --color-canvas: #fff8e9;
   --color-primary-foreground: #ffffff;
+
+  /* Surfaces */
+  --color-surface: #fffdf7;
+  --color-surface-muted: #f8f3e8;
+  --color-border: #d8d1c3;
+
+  /* Gradient glows */
+  --color-glow-peach: #fe6d73;
+  --color-glow-amber: #ffcb77;
+  --color-glow-teal: #24e5d2;
+  --color-glow-blue: #2584a7;
+  --color-glow-violet: #8b7cf6;
 }
 
 .dark {
+  /* Core */
   --color-primary: #affdf0;
   --color-primary-hover: #beef8d;
-  --color-canvas: #393a4f;
+  --color-canvas: #242331;
   --color-primary-foreground: #1e293b;
+
+  /* Surfaces */
+  --color-surface: #2b2a3a;
+  --color-surface-muted: #272634;
+  --color-border: #4b4a5a;
+
+  /* Gradient glows */
+  --color-glow-peach: #ff7b8a;
+  --color-glow-amber: #ffb86b;
+  --color-glow-teal: #4deeea;
+  --color-glow-blue: #4aa9d0;
+  --color-glow-violet: #9b8cff;
 }
 
 html {
@@ -30,6 +56,7 @@ html::-webkit-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }

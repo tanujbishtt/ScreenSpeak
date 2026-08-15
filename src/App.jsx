@@ -1,31 +1,98 @@
-import { Routes, Route, useLocation } from "react-router-dom"
-import Navbar from "./components/layout/Navbar"
-import Footer from "./components/layout/Footer"
-import LandingPage from "./pages/LandingPage"
-import WorkspacePage from "./pages/WorkspacePage"
+import { Routes, Route, useLocation } from "react-router-dom";
+import Navbar from "./components/layout/Navbar";
+import Footer from "./components/layout/Footer";
+import LandingPage from "./pages/LandingPage";
+import WorkspacePage from "./pages/WorkspacePage";
 
 function App() {
-  const location = useLocation()
-  const isHome = location.pathname === "/"
+  const location = useLocation();
+  const isHome = location.pathname === "/";
 
   return (
-    <div className="min-h-screen relative">
+    <div className="relative min-h-screen">
       {/* Site-wide mesh gradient background */}
-      <div className="fixed inset-0 -z-10 bg-canvas overflow-hidden">
-        <div className="absolute -top-32 -left-20 h-[420px] w-[420px] rounded-full bg-[#FE6D73]/25 dark:bg-[#AFFDF0]/10 blur-[130px]" />
-        <div className="absolute -top-10 right-0 h-[380px] w-[380px] rounded-full bg-[#FFCB77]/25 dark:bg-[#BEEF8D]/10 blur-[130px]" />
-        <div className="absolute bottom-0 left-1/4 h-[420px] w-[420px] rounded-full bg-[#24E5D2]/25 dark:bg-[#3A745D]/10 blur-[130px]" />
-        <div className="absolute -bottom-20 right-10 h-[400px] w-[400px] rounded-full bg-[#2584A7]/25 dark:bg-[#393A4F]/10 blur-[130px]" />
+      <div className="fixed inset-0 -z-10 overflow-hidden bg-canvas">
+        {/* Top left */}
+        <div
+          className="
+            absolute
+            -left-32
+            -top-40
+            h-[500px]
+            w-[500px]
+            rounded-full
+            bg-glow-peach/15
+            blur-[150px]
+          "
+        />
+
+        {/* Top right */}
+        <div
+          className="
+            absolute
+            -right-20
+            -top-20
+            h-[450px]
+            w-[450px]
+            rounded-full
+            bg-glow-amber/15
+            blur-[150px]
+          "
+        />
+
+        {/* Center */}
+        <div
+          className="
+            absolute
+            left-[35%]
+            top-[35%]
+            h-[500px]
+            w-[500px]
+            rounded-full
+            bg-glow-teal/10
+            blur-[170px]
+          "
+        />
+
+        {/* Bottom right */}
+        <div
+          className="
+            absolute
+            -bottom-32
+            -right-20
+            h-[500px]
+            w-[500px]
+            rounded-full
+            bg-glow-blue/15
+            blur-[150px]
+          "
+        />
+
+        {/* Bottom left / violet atmosphere */}
+        <div
+          className="
+            absolute
+            bottom-[15%]
+            left-[10%]
+            h-[400px]
+            w-[400px]
+            rounded-full
+            bg-glow-violet/10
+            blur-[160px]
+          "
+        />
       </div>
 
       {isHome && <Navbar />}
+
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/workspace" element={<WorkspacePage />} />
       </Routes>
+
       {isHome && <Footer />}
     </div>
-  )
+  );
 }
 
-export default App  
+export default App;

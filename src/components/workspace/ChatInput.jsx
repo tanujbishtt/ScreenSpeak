@@ -1,9 +1,21 @@
-import { useState } from "react";
-import { Image, ArrowUp } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { ArrowUp } from "lucide-react";
 
 export default function ChatInput({ onSubmit }) {
   const [value, setValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+
+  const textareaRef = useRef(null);
+
+  // Automatically grow textarea with content
+  useEffect(() => {
+    const textarea = textareaRef.current;
+
+    if (!textarea) return;
+
+    textarea.style.height = "auto";
+    textarea.style.height = `${Math.min(textarea.scrollHeight, 180)}px`;
+  }, [value]);
 
   function submit() {
     if (!value.trim()) return;
@@ -34,7 +46,7 @@ export default function ChatInput({ onSubmit }) {
         className={`
           relative
           flex
-          items-center
+          items-end
           rounded-full
           border
           transition-all
@@ -47,46 +59,54 @@ export default function ChatInput({ onSubmit }) {
           shadow-[0_10px_35px_rgba(0,0,0,0.10)]
           dark:shadow-[0_10px_35px_rgba(0,0,0,0.45)]
           hover:shadow-[0_15px_45px_rgba(0,0,0,0.15)]
+
           ${isFocused ? "rounded-[28px]" : ""}
         `}
       >
-        {/* Left Icon */}
-        <Image
-          size={20}
-          className="ml-5 shrink-0 text-slate-400 dark:text-slate-500"
-        />
-
         {/* Input */}
         <textarea
+          ref={textareaRef}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => {
-            if (!value) setIsFocused(false);
+            if (!value.trim()) {
+              setIsFocused(false);
+            }
           }}
           onKeyDown={handleKeyDown}
           rows={1}
-          placeholder="Describe what you see..."
+          placeholder="    Describe what you see..."
           className="
             w-full
             resize-none
+            overflow-y-auto
             bg-transparent
             px-4
             py-5
             text-[15px]
+            leading-6
             text-slate-900
             dark:text-white
             placeholder:text-slate-400
             dark:placeholder:text-slate-500
             outline-none
+
+            scrollbar-none
+            [&::-webkit-scrollbar]:hidden
           "
+          style={{
+            maxHeight: "180px",
+          }}
         />
 
         {/* Send Button */}
         <button
           onClick={submit}
+          disabled={!value.trim()}
           className={`
-            mr-3
+            mb-3
+            mr-5
             flex
             h-10
             w-10
@@ -100,14 +120,16 @@ export default function ChatInput({ onSubmit }) {
             transition-all
             duration-300
             hover:scale-105
-            
             active:scale-95
 
             ${
               isFocused || value
-                ? "opacity-100 translate-x-0"
-                : "opacity-0 translate-x-2 pointer-events-none"
+                ? "translate-x-0 opacity-100"
+                : "pointer-events-none translate-x-2 opacity-0"
             }
+
+            disabled:pointer-events-none
+            disabled:opacity-50
           `}
         >
           <ArrowUp size={18} />
