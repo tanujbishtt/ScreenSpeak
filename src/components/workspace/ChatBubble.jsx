@@ -2,22 +2,14 @@ import { RotateCcw } from "lucide-react";
 
 import Logo from "../layout/Logo";
 
-export default function ChatBubble({ message, onRegenerate }) {
-  const { role, content, isTemplate, canRegenerate } = message;
+export default function ChatBubble({ message, onRegenerate, isRegenerating }){
+  const { role, content, isTemplate, displayLabel, canRegenerate } = message;
 
   if (role === "user" && isTemplate) {
     return (
       <div className="flex justify-end">
-        <div
-          className="
-            rounded-full
-            border border-primary/20
-            bg-primary/10
-            px-4 py-1.5
-            text-sm font-medium text-primary
-          "
-        >
-          {content}
+        <div className="rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary">
+          {displayLabel}
         </div>
       </div>
     );
@@ -64,23 +56,17 @@ export default function ChatBubble({ message, onRegenerate }) {
         "
       >
         {content}
-
         {canRegenerate && (
           <button
             onClick={onRegenerate}
-            className="
-              mt-2
-              flex items-center gap-1.5
-              text-xs
-              text-slate-500
-              transition
-              hover:text-slate-800
-              dark:text-slate-400
-              dark:hover:text-primary-foreground
-            "
+            disabled={isRegenerating}
+            className="mt-2 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-primary-foreground transition disabled:opacity-50"
           >
-            <RotateCcw size={12} />
-            Try another
+            <RotateCcw
+              size={12}
+              className={isRegenerating ? "animate-spin" : ""}
+            />
+            {isRegenerating ? "Regenerating..." : "Try another"}
           </button>
         )}
       </div>

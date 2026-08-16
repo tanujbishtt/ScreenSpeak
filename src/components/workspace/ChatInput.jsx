@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowUp } from "lucide-react";
 
-export default function ChatInput({ onSubmit }) {
+export default function ChatInput({ onSubmit, disabled }) {
   const [value, setValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
@@ -19,9 +19,7 @@ export default function ChatInput({ onSubmit }) {
 
   function submit() {
     const text = value.trim();
-
-    if (!text) return;
-
+    if (!text || disabled) return;
     onSubmit(text);
     setValue("");
     setIsFocused(false);
@@ -60,6 +58,7 @@ export default function ChatInput({ onSubmit }) {
         `}
       >
         <textarea
+          disabled={disabled}
           ref={textareaRef}
           value={value}
           onChange={(event) => setValue(event.target.value)}
@@ -88,8 +87,8 @@ export default function ChatInput({ onSubmit }) {
         />
 
         <button
+          disabled={!value.trim() || disabled}
           onClick={submit}
-          disabled={!value.trim()}
           className={`
             mb-3 mr-5
             flex h-10 w-10 shrink-0

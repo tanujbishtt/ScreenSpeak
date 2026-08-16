@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { BookOpen, Lightbulb, Moon, SkipForward, Sun } from "lucide-react";
 import { Link } from "react-router-dom";
-
 import { images } from "../data/images";
 import { promptTemplates } from "../data/promptTemplates";
 import ChatBubble from "../components/workspace/ChatBubble";
@@ -10,46 +9,25 @@ import SessionDropdown from "../components/workspace/SessionDropdown";
 import Logo from "../components/layout/Logo";
 import { GithubIcon } from "../components/icons/BrandIcons";
 import { useTheme } from "../context/ThemeContext";
+import ApiKeyDropdown from "../components/workspace/ApiKeyDropdown";
+import { askAI } from "../lib/ai";
+import { useAiSettings } from "../hooks/useAiSettings";
+import TypingIndicator from "../components/workspace/TypingIndicator";
 
 function getRandomImage() {
   return images[Math.floor(Math.random() * images.length)];
 }
 
-function getMockResponse(type) {
-  const responses = {
-    description:
-      'Nice try! Small fix: "is walking" instead of "walk" — present continuous fits better here.',
-
-    suggestions:
-      "Try adding more detail — what's the weather like? What's the person wearing? Specifics make your sentence more vivid.",
-
-    grammar:
-      'One issue: subject-verb agreement. "The dogs is running" should be "The dogs are running."',
-
-    native:
-      'A native speaker might say: "There\'s a guy walking his dog in the rain." More casual, uses "there\'s" instead of naming the subject first.',
-
-    genz: "no cap this guy just vibing in the rain with his dog fr 🐕🌧️",
-
-    explain:
-      "Your mistake was mixing tenses — you started in present tense then switched to past halfway through. Stick to one tense per sentence unless the timeline actually changes.",
-
-    followup:
-      "Good question! Since we haven't wired up the real AI yet, this is just a placeholder reply.",
-  };
-
-  return responses[type] || "Here's some feedback on that.";
-}
-
 export default function WorkspacePage() {
   const { theme, toggleTheme } = useTheme();
-
   const [currentImage, setCurrentImage] = useState(getRandomImage);
   const [messages, setMessages] = useState([]);
   const [hasDescribed, setHasDescribed] = useState(false);
   const [activeTab, setActiveTab] = useState(null);
-
   const bottomRef = useRef(null);
+  const { provider, apiKey } = useAiSettings();
+  const [isThinking, setIsThinking] = useState(false);
+  const [regeneratingId, setRegeneratingId] = useState(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -65,48 +43,67 @@ export default function WorkspacePage() {
     ]);
   }
 
-  function handleUserMessage(text) {
-    addMessage({
-      role: "user",
-      content: text,
-    });
+  async function callAI(content, extra = {}) {
+    const newHistory = [...messages, { role: "user", content }];
+    addMessage({ role: "user", content, ...extra });
 
-    if (!hasDescribed) {
-      setHasDescribed(true);
-
-      setTimeout(() => {
-        addMessage({
-          role: "assistant",
-          content: getMockResponse("description"),
-        });
-      }, 800);
-
-      return;
-    }
-
-    setTimeout(() => {
+    setIsThinking(true);
+    try {
+      const reply = await askAI(provider, {
+        apiKey,
+        imageUrl: currentImage.url,
+        history: newHistory.map((m) => ({ role: m.role, content: m.content })),
+      });
+      addMessage({ role: "assistant", content: reply, canRegenerate: true });
+    } catch (err) {
       addMessage({
         role: "assistant",
-        content: getMockResponse("followup"),
-        canRegenerate: true,
+        content: `Something went wrong: ${err.message}`,
       });
-    }, 800);
+    } finally {
+      setIsThinking(false);
+    }
+  }
+
+  async function handleRegenerate(messageId) {
+    const index = messages.findIndex((m) => m.id === messageId);
+    if (index === -1) return;
+
+    const historyBefore = messages.slice(0, index);
+    setRegeneratingId(messageId);
+
+    try {
+      const reply = await askAI(provider, {
+        apiKey,
+        imageUrl: currentImage.url,
+        history: historyBefore.map((m) => ({
+          role: m.role,
+          content: m.content,
+        })),
+      });
+      setMessages((prev) =>
+        prev.map((m) => (m.id === messageId ? { ...m, content: reply } : m)),
+      );
+    } catch (err) {
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === messageId
+            ? { ...m, content: `Something went wrong: ${err.message}` }
+            : m,
+        ),
+      );
+    } finally {
+      setRegeneratingId(null);
+    }
+  }
+
+  function handleUserMessage(text) {
+    if (!hasDescribed) setHasDescribed(true);
+    callAI(text);
   }
 
   function handleTemplateClick(template) {
-    addMessage({
-      role: "user",
-      content: template.label,
-      isTemplate: true,
-    });
-
-    setTimeout(() => {
-      addMessage({
-        role: "assistant",
-        content: getMockResponse(template.id),
-        canRegenerate: true,
-      });
-    }, 800);
+    callAI(template.prompt, { isTemplate: true, displayLabel: template.label });
   }
 
   function handleNextImage() {
@@ -126,13 +123,8 @@ export default function WorkspacePage() {
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden bg-canvas">
       {/* Toolbar */}
-      <div
-        className="
-          relative z-50 flex h-14 shrink-0 items-center justify-between
-          border-b border-border bg-canvas/85 px-4 backdrop-blur-xl
-        "
-      >
-        <div className="flex items-center gap-3">
+      <div className="relative z-50 flex h-14 shrink-0 items-center border-b border-border bg-canvas/85 px-4 backdrop-blur-xl">
+        <div className="flex items-center gap-3 flex-1">
           <Link
             to="/"
             className="flex items-center rounded-lg transition-opacity hover:opacity-80"
@@ -140,33 +132,26 @@ export default function WorkspacePage() {
           >
             <Logo size={22} />
           </Link>
-
           <SessionDropdown />
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex-1 flex justify-center">
+          <ApiKeyDropdown />
+        </div>
+
+        <div className="flex items-center gap-3 flex-1 justify-end">
           <a
             href="https://github.com/tanujbishtt/ScreenSpeak"
             target="_blank"
             rel="noopener noreferrer"
-            className="
-              flex items-center gap-1.5 rounded-full border border-border
-              bg-surface/60 px-3 py-1.5 text-sm text-slate-600 transition
-              hover:border-slate-400 hover:bg-surface
-              dark:border-white/10 dark:bg-white/5 dark:text-slate-300
-              dark:hover:bg-white/10
-            "
+            className="flex items-center gap-1.5 rounded-full border border-border bg-surface/60 px-3 py-1.5 text-sm text-slate-600 transition hover:border-slate-400 hover:bg-surface dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10"
           >
             <GithubIcon size={14} />
             Star
           </a>
-
           <button
             onClick={toggleTheme}
-            className="
-              text-slate-600 transition hover:text-slate-900
-              dark:text-slate-300 dark:hover:text-white
-            "
+            className="text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
             aria-label="Toggle theme"
           >
             {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
@@ -234,9 +219,7 @@ export default function WorkspacePage() {
 
               <button
                 onClick={() =>
-                  setActiveTab(
-                    activeTab === "solution" ? null : "solution"
-                  )
+                  setActiveTab(activeTab === "solution" ? null : "solution")
                 }
                 className={tabButtonClass("solution")}
               >
@@ -319,22 +302,16 @@ export default function WorkspacePage() {
               </p>
             </div>
           ) : (
-            <div
-              className="
-                no-scrollbar flex min-h-0 flex-1 flex-col justify-end
-                gap-4 overflow-y-auto p-5
-              "
-            >
+            <div className="no-scrollbar flex min-h-0 flex-1 flex-col justify-end gap-4 overflow-y-auto p-5">
               {messages.map((message) => (
                 <ChatBubble
                   key={message.id}
                   message={message}
-                  onRegenerate={() =>
-                    console.log("regenerate:", message.content)
-                  }
+                  onRegenerate={() => handleRegenerate(message.id)}
+                  isRegenerating={regeneratingId === message.id}
                 />
               ))}
-
+              {isThinking && <TypingIndicator />}
               <div ref={bottomRef} />
             </div>
           )}
@@ -344,7 +321,7 @@ export default function WorkspacePage() {
               border-t border-border bg-canvas/55 p-4 backdrop-blur-xl
             "
           >
-            <ChatInput onSubmit={handleUserMessage} />
+            <ChatInput onSubmit={handleUserMessage} disabled={isThinking} />
           </div>
         </div>
       </div>
