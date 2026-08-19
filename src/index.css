@@ -20,7 +20,25 @@
   --color-glow-teal: #24e5d2;
   --color-glow-blue: #2584a7;
   --color-glow-violet: #8b7cf6;
+
+  --animate-drift-1: drift-1 18s ease-in-out infinite;
+  --animate-drift-2: drift-2 22s ease-in-out infinite;
+  --animate-drift-3: drift-3 20s ease-in-out infinite;
 }
+
+@keyframes drift-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, -30px) scale(1.1); }
+}
+@keyframes drift-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-30px, 40px) scale(1.05); }
+}
+@keyframes drift-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(20px, 20px) scale(1.08); }
+}
+
 
 .dark {
   /* Core */
