@@ -1,5 +1,4 @@
 import { Route, Routes, useLocation } from "react-router-dom";
-import GrainOverlay from "./components/layout/GrainOverlay"
 
 import Footer from "./components/layout/Footer";
 import Navbar from "./components/layout/Navbar";
@@ -29,8 +28,6 @@ function App() {
         {/* Bottom left */}
         <div className="absolute bottom-[15%] left-[10%] h-100 w-100 rounded-full bg-glow-violet/10 blur-[160px]" />
       </div>
-      <GrainOverlay />
-
       {isHome && <Navbar />}
 
       <Routes>
