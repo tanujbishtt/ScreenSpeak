@@ -6,7 +6,6 @@ import { useAiSettings } from "../../hooks/useAiSettings"
 const PROVIDERS = [
   { id: "gemini", label: "Gemini", keyHint: "AIzaSy...", keyUrl: "https://aistudio.google.com/apikey" },
   { id: "openai", label: "ChatGPT", keyHint: "sk-...", keyUrl: "https://platform.openai.com/api-keys" },
-  { id: "sarvam", label: "Sarvam", keyHint: "sk_...", keyUrl: "https://dashboard.sarvam.ai" },
 ]
 
 export default function ApiKeyDropdown() {
