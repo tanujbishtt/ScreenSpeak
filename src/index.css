@@ -24,6 +24,18 @@
   --animate-drift-1: drift-1 18s ease-in-out infinite;
   --animate-drift-2: drift-2 22s ease-in-out infinite;
   --animate-drift-3: drift-3 20s ease-in-out infinite;
+  --animate-message-in: message-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes message-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @keyframes drift-1 {
@@ -41,23 +53,24 @@
 
 
 .dark {
-  /* Core */
-  --color-primary: #affdf0;
-  --color-primary-hover: #beef8d;
-  --color-canvas: #242331;
-  --color-primary-foreground: #1e293b;
+  /* Core — warm soft gold accent instead of cold mint, easier on the eyes
+     for long reading/learning sessions */
+  --color-primary: #f0c987;
+  --color-primary-hover: #f7dba8;
+  --color-canvas: #23201b;
+  --color-primary-foreground: #23201b;
 
-  /* Surfaces */
-  --color-surface: #2b2a3a;
-  --color-surface-muted: #272634;
-  --color-border: #4b4a5a;
+  /* Surfaces — warm coffee-brown tones instead of blue-tinted grey/black */
+  --color-surface: #2d2a23;
+  --color-surface-muted: #29261f;
+  --color-border: #4a4436;
 
-  /* Gradient glows */
-  --color-glow-peach: #ff7b8a;
-  --color-glow-amber: #ffb86b;
-  --color-glow-teal: #4deeea;
-  --color-glow-blue: #4aa9d0;
-  --color-glow-violet: #9b8cff;
+  /* Gradient glows — kept vivid but shifted warmer to match */
+  --color-glow-peach: #ff9d7a;
+  --color-glow-amber: #ffcf8b;
+  --color-glow-teal: #7fd9c0;
+  --color-glow-blue: #6fa8c9;
+  --color-glow-violet: #b39ddb;
 }
 
 html {

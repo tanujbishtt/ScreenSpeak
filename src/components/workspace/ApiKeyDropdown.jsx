@@ -46,11 +46,18 @@ export default function ApiKeyDropdown() {
         }`}
       >
         <Logo size={16} />
-        {hasKey ? `SceneSpeak · ${PROVIDERS.find((p) => p.id === provider)?.label}` : "Add API Key"}
+        {hasKey ? (
+          <>
+            <span className="hidden sm:inline">SceneSpeak · </span>
+            {PROVIDERS.find((p) => p.id === provider)?.label}
+          </>
+        ) : (
+          "Add API Key"
+        )}
       </button>
 
       {isOpen && (
-        <div className="absolute left-1/2 top-[calc(100%+8px)] z-100 w-80 -translate-x-1/2 rounded-2xl border border-border bg-surface/95 p-4 shadow-[0_18px_50px_rgba(0,0,0,0.15)] backdrop-blur-2xl">
+        <div className="absolute left-1/2 top-[calc(100%+8px)] z-100 w-[min(20rem,calc(100vw-2rem))] -translate-x-1/2 rounded-2xl border border-border bg-surface/95 p-4 shadow-[0_18px_50px_rgba(0,0,0,0.15)] backdrop-blur-2xl">
           <div className="flex gap-1 mb-3 rounded-lg bg-canvas p-1">
             {PROVIDERS.map((p) => (
               <button

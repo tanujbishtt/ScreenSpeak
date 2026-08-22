@@ -1,4 +1,8 @@
-export const images = [
+// TEMP data source. Once curated set is finalized, this content moves into
+// Firestore (collection: "curatedImages") and this file gets replaced by a
+// fetch call — shape stays identical so nothing else needs to change.
+
+export const curatedImages = [
   {
     id: 1,
     url: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=80",
@@ -8,6 +12,8 @@ export const images = [
       { word: "pavement", meaning: "the paved path beside a road, for walking" },
     ],
     solution: "A woman is strolling down the pavement, checking her phone as she walks.",
+    nativeWay: "She's just strolling along, scrolling through her phone.",
+    genZWay: "she's out here vibing, phone in hand, zero rush 💀",
   },
   {
     id: 2,
@@ -18,6 +24,8 @@ export const images = [
       { word: "shelter", meaning: "a place giving protection from bad weather" },
     ],
     solution: "Dark clouds are gathering as rain begins to pour down on the street.",
+    nativeWay: "Looks like it's about to absolutely pour any second now.",
+    genZWay: "sky's looking mad depressed rn, downpour incoming fr 😭",
   },
   {
     id: 3,
@@ -28,6 +36,8 @@ export const images = [
       { word: "teammate", meaning: "a person who plays on the same team as you" },
     ],
     solution: "A group of kids are sprinting across the field, chasing after the ball.",
+    nativeWay: "The kids are booking it across the field after the ball.",
+    genZWay: "these kids sprinting like the ball owes them money 💀",
   },
   {
     id: 4,
@@ -38,6 +48,8 @@ export const images = [
       { word: "garnish", meaning: "a decoration added to a dish before serving" },
     ],
     solution: "Someone is stirring a pot of soup that's simmering on the stove.",
+    nativeWay: "They're giving the soup a stir while it simmers away.",
+    genZWay: "chef mode activated, soup simmering, no notes 🔥",
   },
   {
     id: 5,
@@ -48,5 +60,7 @@ export const images = [
       { word: "wag", meaning: "to move something (like a tail) quickly side to side" },
     ],
     solution: "A dog is wagging its tail happily while its owner holds the leash.",
+    nativeWay: "The dog's tail is going crazy while its owner keeps it on the leash.",
+    genZWay: "dog's tail wagging at like 200bpm rn, pure joy fr 🐶",
   },
 ]
