@@ -53,24 +53,24 @@
 
 
 .dark {
-  /* Core — warm soft gold accent instead of cold mint, easier on the eyes
-     for long reading/learning sessions */
-  --color-primary: #f0c987;
-  --color-primary-hover: #f7dba8;
-  --color-canvas: #23201b;
-  --color-primary-foreground: #23201b;
+  /* Core — soft teal accent stays calming, but base tones are now true
+     neutral grey (equal-ish RGB), no warm brown or cool blue tint */
+  --color-primary: #7dd3bf;
+  --color-primary-hover: #9ce0cf;
+  --color-canvas: #1e1e1e;
+  --color-primary-foreground: #1e1e1e;
 
-  /* Surfaces — warm coffee-brown tones instead of blue-tinted grey/black */
-  --color-surface: #2d2a23;
-  --color-surface-muted: #29261f;
-  --color-border: #4a4436;
+  /* Surfaces — neutral charcoal, not tinted */
+  --color-surface: #272727;
+  --color-surface-muted: #232323;
+  --color-border: #3d3d3d;
 
-  /* Gradient glows — kept vivid but shifted warmer to match */
-  --color-glow-peach: #ff9d7a;
-  --color-glow-amber: #ffcf8b;
-  --color-glow-teal: #7fd9c0;
-  --color-glow-blue: #6fa8c9;
-  --color-glow-violet: #b39ddb;
+  /* Gradient glows — kept vivid for the landing page background */
+  --color-glow-peach: #ff8f7a;
+  --color-glow-amber: #ffc978;
+  --color-glow-teal: #6ee7d4;
+  --color-glow-blue: #60a5c9;
+  --color-glow-violet: #a78bfa;
 }
 
 html {
