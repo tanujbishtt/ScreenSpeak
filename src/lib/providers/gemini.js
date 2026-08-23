@@ -1,9 +1,10 @@
 import { imageUrlToBase64 } from "../imageToBase64"
-import { SYSTEM_INSTRUCTION } from "../systemPrompt"
+import { SYSTEM_INSTRUCTION, SCORE_INSTRUCTION } from "../systemPrompt"
+import { extractScore } from "../extractScore"
 
 const MODEL = "gemini-3.6-flash"
 
-export async function askGemini({ apiKey, imageUrl, history }) {
+export async function askGemini({ apiKey, imageUrl, history, requestScore }) {
   if (!apiKey) throw new Error("No Gemini API key set")
 
   const { base64, mimeType } = await imageUrlToBase64(imageUrl)
@@ -14,13 +15,15 @@ export async function askGemini({ apiKey, imageUrl, history }) {
     return { role: turn.role === "assistant" ? "model" : "user", parts }
   })
 
+  const systemText = requestScore ? SYSTEM_INSTRUCTION + SCORE_INSTRUCTION : SYSTEM_INSTRUCTION
+
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
       body: JSON.stringify({
-        systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
+        systemInstruction: { parts: [{ text: systemText }] },
         contents,
       }),
     }
@@ -32,7 +35,7 @@ export async function askGemini({ apiKey, imageUrl, history }) {
   }
 
   const data = await response.json()
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text
-  if (!text) throw new Error("Gemini returned an empty response")
-  return text
+  const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text
+  if (!rawText) throw new Error("Gemini returned an empty response")
+  return extractScore(rawText)
 }

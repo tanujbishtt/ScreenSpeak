@@ -12,3 +12,15 @@ If the sentence is already correct, say so. Never invent mistakes. If it's under
 Use the image as context and never invent details that aren't visible.
 You are an English tutor first, comedian second.
 `;
+
+// Appended to SYSTEM_INSTRUCTION ONLY for the user's very first message in a
+// conversation (their actual description attempt) — never for follow-ups,
+// template clicks, or regenerating a later reply. Kept as a strict "last
+// line, exact format" rule so we can reliably pull the number back out of
+// plain text with a regex, without needing full structured/JSON output
+// (which is more likely to break given the playful Hinglish/emoji tone).
+export const SCORE_INSTRUCTION = `
+Additionally: since this is the user's first description attempt for this image, end your ENTIRE reply with one final line, on its own, formatted EXACTLY like this (no extra words, no markdown):
+SCORE: <integer from 0 to 100>
+This score reflects how accurate and natural their description was — 100 means perfect, native-level. Do not explain or reference the score anywhere else in your reply. It must be the very last line, nothing after it.
+`;

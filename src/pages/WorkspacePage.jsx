@@ -79,7 +79,7 @@ export default function WorkspacePage() {
     setMessages((prev) => [...prev, { id: Date.now() + Math.random(), ...message }])
   }
 
-  async function callAI(content, extra = {}) {
+  async function callAI(content, extra = {}, requestScore = false) {
     const newHistory = [...messages, { role: "user", content }]
     addMessage({ role: "user", content, ...extra })
 
@@ -89,8 +89,9 @@ export default function WorkspacePage() {
         apiKey,
         imageUrl: currentImage.url,
         history: newHistory.map((m) => ({ role: m.role, content: m.content })),
+        requestScore,
       })
-      addMessage({ role: "assistant", content: reply, canRegenerate: true })
+      addMessage({ role: "assistant", content: reply.text, score: reply.score, canRegenerate: true })
     } catch (err) {
       addMessage({ role: "assistant", content: `Something went wrong: ${err.message}` })
     } finally {
@@ -103,6 +104,7 @@ export default function WorkspacePage() {
     if (index === -1) return
 
     const historyBefore = messages.slice(0, index)
+    const requestScore = index === 1 // the very first assistant reply is the only scored one
     setRegeneratingId(messageId)
 
     try {
@@ -110,8 +112,11 @@ export default function WorkspacePage() {
         apiKey,
         imageUrl: currentImage.url,
         history: historyBefore.map((m) => ({ role: m.role, content: m.content })),
+        requestScore,
       })
-      setMessages((prev) => prev.map((m) => (m.id === messageId ? { ...m, content: reply } : m)))
+      setMessages((prev) =>
+        prev.map((m) => (m.id === messageId ? { ...m, content: reply.text, score: reply.score } : m)),
+      )
     } catch (err) {
       setMessages((prev) =>
         prev.map((m) =>
@@ -124,8 +129,9 @@ export default function WorkspacePage() {
   }
 
   function handleUserMessage(text) {
-    if (!hasDescribed) setHasDescribed(true)
-    callAI(text)
+    const isFirstAttempt = !hasDescribed
+    if (isFirstAttempt) setHasDescribed(true)
+    callAI(text, {}, isFirstAttempt)
   }
 
   function handleTemplateClick(template) {

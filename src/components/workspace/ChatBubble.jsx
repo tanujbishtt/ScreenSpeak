@@ -1,8 +1,9 @@
 import { RotateCcw, Sparkles } from "lucide-react"
 import Logo from "../layout/Logo"
+import ScoreRing from "./ScoreRing"
 
 export default function ChatBubble({ message, onRegenerate, isRegenerating }) {
-  const { role, content, isTemplate, displayLabel, canRegenerate } = message
+  const { role, content, isTemplate, displayLabel, canRegenerate, score } = message
 
   if (role === "user" && isTemplate) {
     return (
@@ -57,6 +58,11 @@ export default function ChatBubble({ message, onRegenerate, isRegenerating }) {
           dark:text-slate-200
         "
       >
+        {typeof score === "number" && (
+          <div className="mb-2.5 border-b border-black/5 pb-2.5 dark:border-white/10">
+            <ScoreRing score={score} />
+          </div>
+        )}
         {content}
         {canRegenerate && (
           <button

@@ -1,15 +1,18 @@
 import { imageUrlToBase64 } from "../imageToBase64"
-import { SYSTEM_INSTRUCTION } from "../systemPrompt"
+import { SYSTEM_INSTRUCTION, SCORE_INSTRUCTION } from "../systemPrompt"
+import { extractScore } from "../extractScore"
 
 const MODEL = "gpt-5.6"
 
-export async function askOpenAI({ apiKey, imageUrl, history }) {
+export async function askOpenAI({ apiKey, imageUrl, history, requestScore }) {
   if (!apiKey) throw new Error("No OpenAI API key set")
 
   const { base64, mimeType } = await imageUrlToBase64(imageUrl)
 
+  const systemText = requestScore ? SYSTEM_INSTRUCTION + SCORE_INSTRUCTION : SYSTEM_INSTRUCTION
+
   const messages = [
-    { role: "system", content: SYSTEM_INSTRUCTION },
+    { role: "system", content: systemText },
     ...history.map((turn, i) => {
       if (i === 0) {
         return {
@@ -24,7 +27,7 @@ export async function askOpenAI({ apiKey, imageUrl, history }) {
     }),
   ]
 
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+  const response = await fetch("/api/openai/v1/chat/completions", {
     method: "POST",
     headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
     body: JSON.stringify({ model: MODEL, messages }),
@@ -36,7 +39,7 @@ export async function askOpenAI({ apiKey, imageUrl, history }) {
   }
 
   const data = await response.json()
-  const text = data.choices?.[0]?.message?.content
-  if (!text) throw new Error("OpenAI returned an empty response")
-  return text
+  const rawText = data.choices?.[0]?.message?.content
+  if (!rawText) throw new Error("OpenAI returned an empty response")
+  return extractScore(rawText)
 }
