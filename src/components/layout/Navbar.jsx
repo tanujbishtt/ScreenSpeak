@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { Menu, Moon, Sun, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
-import { useTheme } from "../../context/ThemeContext";
+import ThemeToggle from "./ThemeToggle";
 import {GithubIcon} from '../icons/BrandIcons'
 
 const navLinks = [
@@ -17,7 +17,6 @@ const anchorLinks = [
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme();
 
   const { pathname } = useLocation();
   const isHome = pathname === "/";
@@ -110,19 +109,10 @@ export default function Navbar() {
           </div>
 
           {/* Theme toggle */}
-          <button
-            onClick={toggleTheme}
-            aria-label="Toggle theme"
-            className="
-              flex h-8 w-8 items-center justify-center rounded-full
-              text-slate-600
-              transition-all duration-300
-              hover:bg-white/20 hover:text-slate-900
-              dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-white
-            "
-          >
-            {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
-          </button>
+          <ThemeToggle
+            size={17}
+            className="text-slate-600 hover:bg-white/20 hover:text-slate-900 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-white"
+          />
 
           {/* Mobile menu */}
           {isHome && (

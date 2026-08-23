@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react"
-import { Moon, Sun } from "lucide-react"
 import { Link } from "react-router-dom"
 import { curatedImages } from "../data/curatedImages"
 import ImageMedia from "../components/workspace/ImageMedia"
@@ -8,23 +7,32 @@ import ChatPanel from "../components/workspace/ChatPanel"
 import SessionDropdown from "../components/workspace/SessionDropdown"
 import Logo from "../components/layout/Logo"
 import { GithubIcon } from "../components/icons/BrandIcons"
-import { useTheme } from "../context/ThemeContext"
+import ThemeToggle from "../components/layout/ThemeToggle"
 import ApiKeyDropdown from "../components/workspace/ApiKeyDropdown"
 import { askAI } from "../lib/ai"
 import { useAiSettings } from "../hooks/useAiSettings"
 import { useSessions } from "../hooks/useSessions"
 import { useIsMobile } from "../hooks/useIsMobile"
 import { fileToObjectUrl, revokeObjectUrl } from "../lib/fileToObjectUrl"
+import { useAchievements } from "../hooks/useAchievements"
+import AchievementShelf from "../components/workspace/AchievementShelf"
+import AchievementToast from "../components/workspace/AchievementToast"
 
 function getRandomCuratedImage() {
   return curatedImages[Math.floor(Math.random() * curatedImages.length)]
 }
 
 export default function WorkspacePage() {
-  const { theme, toggleTheme } = useTheme()
   const { provider, apiKey } = useAiSettings()
   const { sessions, upsertSession, deleteSession } = useSessions()
   const isMobile = useIsMobile()
+  const {
+    achievements,
+    newlyUnlocked,
+    recordScore,
+    recordReferenceView,
+    dismissUnlock,
+  } = useAchievements()
 
   const [currentImage, setCurrentImage] = useState(getRandomCuratedImage)
   const [messages, setMessages] = useState([])
@@ -92,6 +100,10 @@ export default function WorkspacePage() {
         requestScore,
       })
       addMessage({ role: "assistant", content: reply.text, score: reply.score, canRegenerate: true })
+
+      // Achievements only count the FIRST scored attempt on an image —
+      // never on regenerate (see handleRegenerate), so streaks can't be farmed.
+      if (requestScore && typeof reply.score === "number") recordScore(reply.score)
     } catch (err) {
       addMessage({ role: "assistant", content: `Something went wrong: ${err.message}` })
     } finally {
@@ -136,6 +148,14 @@ export default function WorkspacePage() {
 
   function handleTemplateClick(template) {
     callAI(template.prompt, { isTemplate: true, displayLabel: template.label })
+  }
+
+  // Wraps setActiveTab so opening the Native/Gen-Z reference tab also
+  // counts toward the "Native Curious" achievement — ImageReference.jsx
+  // itself needs zero changes, it just calls whatever setter it's given.
+  function handleSetActiveTab(next) {
+    setActiveTab(next)
+    if (next === "reference") recordReferenceView()
   }
 
   function handleRenameSession(newName) {
@@ -184,6 +204,7 @@ export default function WorkspacePage() {
         </div>
 
         <div className="flex flex-1 items-center justify-end gap-3">
+          <AchievementShelf achievements={achievements} />
           <a
             href="https://github.com/tanujbishtt/ScreenSpeak"
             target="_blank"
@@ -193,15 +214,11 @@ export default function WorkspacePage() {
             <GithubIcon size={14} />
             <span className="hidden sm:inline">Star</span>
           </a>
-          <button
-            onClick={toggleTheme}
-            className="text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
-            aria-label="Toggle theme"
-          >
-            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
+          <ThemeToggle className="text-slate-600 hover:bg-black/5 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white" />
         </div>
       </div>
+
+      <AchievementToast unlocked={newlyUnlocked} onDismiss={dismissUnlock} />
 
       {isMobile ? (
         // MOBILE: one continuous scroll. Image is `sticky top-0` so it stays
@@ -214,7 +231,7 @@ export default function WorkspacePage() {
             <ImageReference
               image={currentImage}
               activeTab={activeTab}
-              setActiveTab={setActiveTab}
+              setActiveTab={handleSetActiveTab}
               hasDescribed={hasDescribed}
               onUpload={handleUpload}
               onTemplateClick={handleTemplateClick}
@@ -239,7 +256,7 @@ export default function WorkspacePage() {
               <ImageReference
                 image={currentImage}
                 activeTab={activeTab}
-                setActiveTab={setActiveTab}
+                setActiveTab={handleSetActiveTab}
                 hasDescribed={hasDescribed}
                 onUpload={handleUpload}
                 onTemplateClick={handleTemplateClick}

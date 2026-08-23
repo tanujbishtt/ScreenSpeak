@@ -1,10 +1,8 @@
-// A circle's edge length is 2 * PI * radius. We draw the ring as a dashed
-// stroke where the dash length = the full circle, and we control how much
-// of that dash is "filled in" via strokeDashoffset — offsetting by
-// (1 - percentage) of the circle hides that much of the stroke, which is
-// the standard SVG trick for a progress ring.
+import { useEffect, useState } from "react"
+
 const RADIUS = 20
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
+const ANIMATION_MS = 700
 
 function ringColor(score) {
   if (score >= 80) return "#4ade80" // green — great
@@ -13,12 +11,31 @@ function ringColor(score) {
 }
 
 export default function ScoreRing({ score }) {
-  const offset = CIRCUMFERENCE * (1 - score / 100)
+  // Starts at 0 and counts up to `score` on mount, driving BOTH the number
+  // AND the ring fill off the same value every frame — they land in sync,
+  // instead of the ring sweeping in via CSS transition while the number
+  // just pops straight to its final value.
+  const [displayScore, setDisplayScore] = useState(0)
+
+  useEffect(() => {
+    let frame
+    const start = performance.now()
+
+    function tick(now) {
+      const progress = Math.min((now - start) / ANIMATION_MS, 1)
+      const eased = 1 - Math.pow(1 - progress, 3) // ease-out cubic
+      setDisplayScore(Math.round(eased * score))
+      if (progress < 1) frame = requestAnimationFrame(tick)
+    }
+
+    frame = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frame)
+  }, [score])
+
+  const offset = CIRCUMFERENCE * (1 - displayScore / 100)
 
   return (
-    <div className="flex items-center gap-2.5">
-      {/* relative wrapper + absolutely-centered number is the standard way
-          to overlay text on top of an SVG shape */}
+    <div className="flex animate-score-in items-center gap-2.5">
       <div className="relative h-12 w-12 shrink-0">
         <svg width="48" height="48" viewBox="0 0 48 48" className="-rotate-90">
           <circle
@@ -40,11 +57,10 @@ export default function ScoreRing({ score }) {
             strokeLinecap="round"
             strokeDasharray={CIRCUMFERENCE}
             strokeDashoffset={offset}
-            className="transition-[stroke-dashoffset] duration-700 ease-out"
           />
         </svg>
         <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-slate-700 dark:text-slate-200">
-          {score}
+          {displayScore}
         </span>
       </div>
       <span className="text-xs text-slate-500 dark:text-slate-400">fluency score</span>
