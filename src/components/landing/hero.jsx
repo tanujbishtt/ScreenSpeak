@@ -1,7 +1,25 @@
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import shaku from '../../assets/shaku_bhai.jpg'
+import { useAuth } from "../../hooks/useAuth"
 
 export default function Hero() {
+  const navigate = useNavigate()
+  const { user, signInWithGoogle } = useAuth()
+
+  async function handleSignInClick() {
+    if (user) {
+      navigate("/workspace")
+      return
+    }
+    try {
+      await signInWithGoogle()
+      navigate("/workspace")
+    } catch (err) {
+      console.error("Google sign-in failed:", err)
+    }
+  }
+
   return (
     <section className="relative overflow-hidden">
       {/* Background Glow */}
@@ -36,8 +54,11 @@ export default function Hero() {
                 Give it a Shot
               </Link>
 
-              <button className="rounded-2xl border border-primary px-8 py-3.5 font-semibold text-primary transition-colors hover:bg-primary/10">
-                Sign In
+              <button
+                onClick={handleSignInClick}
+                className="rounded-2xl border border-primary px-8 py-3.5 font-semibold text-primary transition-colors hover:bg-primary/10"
+              >
+                {user ? "Continue" : "Sign In"}
               </button>
             </div>
 

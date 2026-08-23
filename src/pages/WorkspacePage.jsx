@@ -9,13 +9,13 @@ import Logo from "../components/layout/Logo"
 import { GithubIcon } from "../components/icons/BrandIcons"
 import ThemeToggle from "../components/layout/ThemeToggle"
 import ApiKeyDropdown from "../components/workspace/ApiKeyDropdown"
+import ProfileMenu from "../components/workspace/ProfileMenu"
 import { askAI } from "../lib/ai"
 import { useAiSettings } from "../hooks/useAiSettings"
 import { useSessions } from "../hooks/useSessions"
 import { useIsMobile } from "../hooks/useIsMobile"
 import { fileToObjectUrl, revokeObjectUrl } from "../lib/fileToObjectUrl"
 import { useAchievements } from "../hooks/useAchievements"
-import AchievementShelf from "../components/workspace/AchievementShelf"
 import AchievementToast from "../components/workspace/AchievementToast"
 
 function getRandomCuratedImage() {
@@ -27,6 +27,7 @@ export default function WorkspacePage() {
   const { sessions, upsertSession, deleteSession } = useSessions()
   const isMobile = useIsMobile()
   const {
+    stats,
     achievements,
     newlyUnlocked,
     recordScore,
@@ -204,12 +205,12 @@ export default function WorkspacePage() {
         </div>
 
         <div className="flex flex-1 items-center justify-end gap-3">
-          <AchievementShelf achievements={achievements} />
+          <ProfileMenu totalDescribed={stats.totalDescribed} achievements={achievements} />
           <a
             href="https://github.com/tanujbishtt/ScreenSpeak"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 rounded-full border border-border bg-surface/60 px-2.5 py-1.5 text-sm text-slate-600 transition hover:border-slate-400 hover:bg-surface dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10"
+            className="hidden items-center gap-1.5 rounded-full border border-border bg-surface/60 px-2.5 py-1.5 text-sm text-slate-600 transition hover:border-slate-400 hover:bg-surface sm:flex dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10"
           >
             <GithubIcon size={14} />
             <span className="hidden sm:inline">Star</span>

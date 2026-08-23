@@ -5,6 +5,7 @@ import Footer from "./components/layout/Footer";
 import Navbar from "./components/layout/Navbar";
 import LandingPage from "./pages/LandingPage";
 import WorkspacePage from "./pages/WorkspacePage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   const { pathname } = useLocation();
@@ -36,6 +37,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/workspace" element={<WorkspacePage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
 
       {isHome && <Footer />}
