@@ -1,9 +1,10 @@
 import { RotateCcw, Sparkles } from "lucide-react"
 import Logo from "../layout/Logo"
 import ScoreRing from "./ScoreRing"
+import DiffView from "./DiffView"
 
 export default function ChatBubble({ message, onRegenerate, isRegenerating }) {
-  const { role, content, isTemplate, displayLabel, canRegenerate, score } = message
+  const { role, content, isTemplate, displayLabel, canRegenerate, score, corrected, originalText } = message
 
   if (role === "user" && isTemplate) {
     return (
@@ -62,6 +63,9 @@ export default function ChatBubble({ message, onRegenerate, isRegenerating }) {
           <div className="mb-2.5 border-b border-black/5 pb-2.5 dark:border-white/10">
             <ScoreRing score={score} />
           </div>
+        )}
+        {typeof score === "number" && corrected && originalText && (
+          <DiffView original={originalText} corrected={corrected} />
         )}
         {content}
         {canRegenerate && (

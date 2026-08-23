@@ -12,9 +12,13 @@ import ApiKeyDropdown from "../components/workspace/ApiKeyDropdown"
 import ProfileMenu from "../components/workspace/ProfileMenu"
 import { askAI } from "../lib/ai"
 import { useAiSettings } from "../hooks/useAiSettings"
+import { useAuth } from "../hooks/useAuth"
 import { useSessions } from "../hooks/useSessions"
 import { useIsMobile } from "../hooks/useIsMobile"
+import { useTonePreference } from "../hooks/useTonePreference"
 import { fileToObjectUrl, revokeObjectUrl } from "../lib/fileToObjectUrl"
+import { uploadImageToStorage } from "../lib/uploadImage"
+import { fireConfetti } from "../lib/confetti"
 import { useAchievements } from "../hooks/useAchievements"
 import AchievementToast from "../components/workspace/AchievementToast"
 
@@ -24,8 +28,10 @@ function getRandomCuratedImage() {
 
 export default function WorkspacePage() {
   const { provider, apiKey } = useAiSettings()
+  const { user } = useAuth()
   const { sessions, upsertSession, deleteSession } = useSessions()
   const isMobile = useIsMobile()
+  const { tone, setTone } = useTonePreference()
   const {
     stats,
     achievements,
@@ -41,6 +47,7 @@ export default function WorkspacePage() {
   const [activeTab, setActiveTab] = useState(null)
   const [isThinking, setIsThinking] = useState(false)
   const [regeneratingId, setRegeneratingId] = useState(null)
+  const [isUploadingImage, setIsUploadingImage] = useState(false)
 
   const [sessionId, setSessionId] = useState(null)
   const [sessionName, setSessionName] = useState("Untitled")
@@ -77,11 +84,30 @@ export default function WorkspacePage() {
     resetForNewImage(getRandomCuratedImage())
   }
 
-  function handleUpload(file) {
+  async function handleUpload(file) {
     revokeObjectUrl(uploadedUrlRef.current)
-    const url = fileToObjectUrl(file)
-    uploadedUrlRef.current = url
-    resetForNewImage({ id: `uploaded-${Date.now()}`, url })
+
+    const previewUrl = fileToObjectUrl(file)
+    uploadedUrlRef.current = previewUrl
+    const uploadId = `uploaded-${Date.now()}`
+    resetForNewImage({ id: uploadId, url: previewUrl })
+
+    if (!user) return
+
+    setIsUploadingImage(true)
+    try {
+      const downloadUrl = await uploadImageToStorage(user.uid, uploadId, file)
+      setCurrentImage((prev) => (prev.id === uploadId ? { ...prev, url: downloadUrl } : prev))
+
+      if (uploadedUrlRef.current === previewUrl) {
+        revokeObjectUrl(previewUrl)
+        uploadedUrlRef.current = null
+      }
+    } catch (err) {
+      console.error("Image upload failed:", err)
+    } finally {
+      setIsUploadingImage(false)
+    }
   }
 
   function addMessage(message) {
@@ -99,12 +125,24 @@ export default function WorkspacePage() {
         imageUrl: currentImage.url,
         history: newHistory.map((m) => ({ role: m.role, content: m.content })),
         requestScore,
+        tone,
       })
-      addMessage({ role: "assistant", content: reply.text, score: reply.score, canRegenerate: true })
+      addMessage({
+        role: "assistant",
+        content: reply.text,
+        score: reply.score,
+        corrected: reply.corrected,
+        originalText: requestScore ? content : undefined,
+        canRegenerate: true,
+      })
 
-      // Achievements only count the FIRST scored attempt on an image —
-      // never on regenerate (see handleRegenerate), so streaks can't be farmed.
-      if (requestScore && typeof reply.score === "number") recordScore(reply.score)
+      // Achievements + confetti only count the FIRST scored attempt on an
+      // image — never on regenerate (see handleRegenerate), so streaks
+      // can't be farmed and confetti doesn't spam on every retry.
+      if (requestScore && typeof reply.score === "number") {
+        recordScore(reply.score)
+        if (reply.score >= 80) fireConfetti()
+      }
     } catch (err) {
       addMessage({ role: "assistant", content: `Something went wrong: ${err.message}` })
     } finally {
@@ -126,10 +164,19 @@ export default function WorkspacePage() {
         imageUrl: currentImage.url,
         history: historyBefore.map((m) => ({ role: m.role, content: m.content })),
         requestScore,
+        tone,
       })
+      const originalText = requestScore ? historyBefore[historyBefore.length - 1]?.content : undefined
+
       setMessages((prev) =>
-        prev.map((m) => (m.id === messageId ? { ...m, content: reply.text, score: reply.score } : m)),
+        prev.map((m) =>
+          m.id === messageId
+            ? { ...m, content: reply.text, score: reply.score, corrected: reply.corrected, originalText }
+            : m,
+        ),
       )
+
+      if (requestScore && typeof reply.score === "number" && reply.score >= 80) fireConfetti()
     } catch (err) {
       setMessages((prev) =>
         prev.map((m) =>
@@ -226,7 +273,7 @@ export default function WorkspacePage() {
         // visible right under the navbar while the rest scrolls underneath it.
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
           <div className="sticky top-0 z-10">
-            <ImageMedia image={currentImage} onSkip={handleSkip} variant="sticky" />
+            <ImageMedia image={currentImage} onSkip={handleSkip} variant="sticky" isUploading={isUploadingImage} />
           </div>
           <div className="bg-surface-muted/70 p-5">
             <ImageReference
@@ -246,6 +293,8 @@ export default function WorkspacePage() {
             bottomRef={bottomRef}
             onSubmit={handleUserMessage}
             onRegenerate={handleRegenerate}
+            tone={tone}
+            setTone={setTone}
           />
         </div>
       ) : (
@@ -253,7 +302,7 @@ export default function WorkspacePage() {
         <div className="flex min-h-0 flex-1 flex-row overflow-hidden">
           <div className="flex w-1/2 flex-col border-r border-border bg-surface-muted/70">
             <div className="no-scrollbar flex-1 overflow-y-auto p-5">
-              <ImageMedia image={currentImage} onSkip={handleSkip} variant="panel" />
+              <ImageMedia image={currentImage} onSkip={handleSkip} variant="panel" isUploading={isUploadingImage} />
               <ImageReference
                 image={currentImage}
                 activeTab={activeTab}
@@ -272,6 +321,8 @@ export default function WorkspacePage() {
             bottomRef={bottomRef}
             onSubmit={handleUserMessage}
             onRegenerate={handleRegenerate}
+            tone={tone}
+            setTone={setTone}
           />
         </div>
       )}

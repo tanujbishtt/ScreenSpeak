@@ -1,10 +1,12 @@
 import ChatBubble from "./ChatBubble"
 import ChatInput from "./ChatInput"
 import TypingIndicator from "./TypingIndicator"
+import ToneToggle from "./ToneToggle"
 import Logo from "../layout/Logo"
 
 // props:
 //   messages, isThinking, regeneratingId, bottomRef, onSubmit, onRegenerate
+//   tone, setTone - from useTonePreference()
 //   variant - "desktop" (own bounded scroll region, right-hand column) or
 //             "mobile" (joins the page's single scroll, input stays sticky
 //             at the bottom of the viewport instead of the panel)
@@ -15,17 +17,24 @@ export default function ChatPanel({
   bottomRef,
   onSubmit,
   onRegenerate,
+  tone,
+  setTone,
   variant = "desktop",
 }) {
   const isMobile = variant === "mobile"
 
   return (
     <div className={isMobile ? "flex flex-1 flex-col" : "flex min-h-0 w-1/2 flex-col bg-surface/70"}>
-      {!isMobile && (
-        <div className="border-b border-border bg-surface/50 px-5 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300">
-          Chat
-        </div>
-      )}
+      <div
+        className={`flex items-center border-b border-border bg-surface/50 px-5 py-2.5 ${
+          isMobile ? "justify-end" : "justify-between"
+        }`}
+      >
+        {!isMobile && (
+          <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Chat</span>
+        )}
+        <ToneToggle tone={tone} setTone={setTone} />
+      </div>
 
       {messages.length === 0 ? (
         <div

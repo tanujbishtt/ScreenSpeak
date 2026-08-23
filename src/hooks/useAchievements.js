@@ -1,10 +1,11 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { doc, onSnapshot, setDoc } from "firebase/firestore"
+import { db } from "../lib/firebase"
 import { achievements } from "../data/achievements"
+import { useAuth } from "./useAuth"
 
 const STORAGE_KEY = "scenespeak_achievements"
 
-// Same localStorage-first-then-Firebase-later shape as useSessions.js.
-// All the stats needed to evaluate EVERY achievement's `check()` live here.
 const DEFAULT_STATS = {
   totalDescribed: 0,
   currentStreak: 0,     // consecutive first-attempts scored 70+
@@ -16,7 +17,8 @@ const DEFAULT_STATS = {
   unlockedIds: [],
 }
 
-function readStats() {
+// ---- Guest path: localStorage, unchanged from before ----
+function readLocal() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     return raw ? { ...DEFAULT_STATS, ...JSON.parse(raw) } : DEFAULT_STATS
@@ -25,16 +27,44 @@ function readStats() {
   }
 }
 
-function writeStats(stats) {
+function writeLocal(stats) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(stats))
 }
 
 export function useAchievements() {
-  const [stats, setStats] = useState(readStats)
+  const { user } = useAuth()
+  const [stats, setStats] = useState(user ? DEFAULT_STATS : readLocal)
   // Achievements unlocked THIS session that haven't been shown/dismissed
-  // yet — this is what drives the toast popup, separate from `stats`
-  // (which persists forever) so a toast doesn't reappear on reload.
+  // yet — drives the toast popup, separate from `stats` so a toast
+  // doesn't reappear on reload.
   const [newlyUnlocked, setNewlyUnlocked] = useState([])
+
+  // Logged in: live-subscribe to the stats fields on the user doc — also
+  // what picks up the migrated values right after first login.
+  useEffect(() => {
+    if (!user) return
+    const ref = doc(db, "users", user.uid)
+    const unsubscribe = onSnapshot(ref, (snap) => {
+      const data = snap.data()
+      if (!data) return
+      setStats({
+        totalDescribed: data.totalDescribed ?? 0,
+        currentStreak: data.currentStreak ?? 0,
+        bestStreak: data.bestStreak ?? 0,
+        currentLossStreak: data.currentLossStreak ?? 0,
+        bestLossStreak: data.bestLossStreak ?? 0,
+        referenceTabViews: data.referenceTabViews ?? 0,
+        bestScore: data.bestScore ?? 0,
+        unlockedIds: data.unlockedIds ?? [],
+      })
+    })
+    return unsubscribe
+  }, [user])
+
+  // Sign-out mid-session: switch back to local stats immediately.
+  useEffect(() => {
+    if (!user) setStats(readLocal())
+  }, [user])
 
   function applyUpdate(updater) {
     setStats((prev) => {
@@ -53,13 +83,19 @@ export function useAchievements() {
         setNewlyUnlocked((prevToasts) => [...prevToasts, ...justUnlocked])
       }
 
-      writeStats(withUnlocks)
+      if (user) {
+        setDoc(doc(db, "users", user.uid), withUnlocks, { merge: true }).catch((err) =>
+          console.error("Failed to save achievement stats:", err),
+        )
+      } else {
+        writeLocal(withUnlocks)
+      }
+
       return withUnlocks
     })
   }
 
-  // Call ONLY for the scored first-attempt reply (never for regenerates —
-  // regenerating shouldn't let someone farm the streak).
+  // Call ONLY for the scored first-attempt reply (never regenerates).
   function recordScore(score) {
     applyUpdate((prev) => {
       const isGood = score >= 70

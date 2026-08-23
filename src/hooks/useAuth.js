@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import { onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth"
 import { auth, googleProvider } from "../lib/firebase"
 import { ensureUserProfile } from "../lib/userProfile"
+import { migrateLocalSessionsIfNeeded } from "../lib/migrateSessions"
+import { migrateLocalAchievementsIfNeeded } from "../lib/migrateAchievements"
 
 export function useAuth() {
   const [user, setUser] = useState(null)
@@ -9,12 +11,17 @@ export function useAuth() {
 
   useEffect(() => {
     // Fires once on mount with the cached session (if any), then again on
-    // every sign-in/sign-out. This is the single source of truth for
-    // "is anyone logged in" across the whole app.
+    // every sign-in/sign-out. Single source of truth for "who's logged in"
+    // across the whole app.
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser)
       setAuthLoading(false)
-      if (firebaseUser) await ensureUserProfile(firebaseUser)
+
+      if (firebaseUser) {
+        const profile = await ensureUserProfile(firebaseUser)
+        await migrateLocalSessionsIfNeeded(firebaseUser.uid, profile)
+        await migrateLocalAchievementsIfNeeded(firebaseUser.uid, profile)
+      }
     })
     return unsubscribe
   }, [])

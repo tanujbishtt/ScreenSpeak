@@ -1,15 +1,15 @@
 import { imageUrlToBase64 } from "../imageToBase64"
-import { SYSTEM_INSTRUCTION, SCORE_INSTRUCTION } from "../systemPrompt"
+import { getSystemInstruction, SCORE_INSTRUCTION } from "../systemPrompt"
 import { extractScore } from "../extractScore"
 
 const MODEL = "gpt-5.6"
 
-export async function askOpenAI({ apiKey, imageUrl, history, requestScore }) {
+export async function askOpenAI({ apiKey, imageUrl, history, requestScore, tone }) {
   if (!apiKey) throw new Error("No OpenAI API key set")
 
   const { base64, mimeType } = await imageUrlToBase64(imageUrl)
 
-  const systemText = requestScore ? SYSTEM_INSTRUCTION + SCORE_INSTRUCTION : SYSTEM_INSTRUCTION
+  const systemText = getSystemInstruction(tone) + (requestScore ? SCORE_INSTRUCTION : "")
 
   const messages = [
     { role: "system", content: systemText },

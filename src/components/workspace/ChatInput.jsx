@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from "react"
 import { ArrowUp } from "lucide-react"
+import { playWhoosh } from "../../lib/sound"
 
 export default function ChatInput({ onSubmit, disabled }) {
   const [value, setValue] = useState("")
   const textareaRef = useRef(null)
 
-  // Grow with content while keeping a maximum height. This is the only
-  // "dynamic sizing" left — the box itself no longer changes WIDTH on
-  // focus like before, just its height as you type more lines.
   useEffect(() => {
     const textarea = textareaRef.current
     if (!textarea) return
@@ -18,6 +16,7 @@ export default function ChatInput({ onSubmit, disabled }) {
   function submit() {
     const text = value.trim()
     if (!text || disabled) return
+    playWhoosh()
     onSubmit(text)
     setValue("")
   }
