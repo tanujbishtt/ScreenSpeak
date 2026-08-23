@@ -112,7 +112,7 @@ export default function ImageReference({
           key fix — previously these wrapped onto 2-3 lines and pushed the
           chat panel down out of view on mobile. */}
       {hasDescribed && (
-        <div className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pt-2">
+        <div className="flex-wrap no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pt-2">
           {promptTemplates.map((template) => (
             <button
               key={template.id}

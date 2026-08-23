@@ -1,11 +1,10 @@
-import { SkipForward, CloudUpload } from "lucide-react"
+import { SkipForward } from "lucide-react"
 
 // props:
-//   image      - current image object
-//   onSkip     - curated-only "next image" action
-//   variant    - "sticky" (compact mobile header) or "panel" (desktop card)
-//   isUploading - true while an uploaded image is still saving to Storage
-export default function ImageMedia({ image, onSkip, variant = "panel", isUploading = false }) {
+//   image   - current image object
+//   onSkip  - curated-only "next image" action
+//   variant - "sticky" (compact mobile header) or "panel" (desktop card)
+export default function ImageMedia({ image, onSkip, variant = "panel" }) {
   const isCurated = Boolean(image.vocab)
   const isSticky = variant === "sticky"
 
@@ -51,19 +50,6 @@ export default function ImageMedia({ image, onSkip, variant = "panel", isUploadi
         >
           <SkipForward size={15} />
         </button>
-      )}
-
-      {isUploading && (
-        <span
-          className="
-            absolute left-3 top-3 flex items-center gap-1.5 rounded-full
-            bg-slate-900/65 px-3 py-1 text-xs font-medium text-white
-            backdrop-blur-md
-          "
-        >
-          <CloudUpload size={12} className="animate-pulse" />
-          Saving to cloud...
-        </span>
       )}
     </div>
   )

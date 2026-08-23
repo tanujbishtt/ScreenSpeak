@@ -1,15 +1,13 @@
 import { Link } from "react-router-dom"
 import {
-  ArrowLeft, Footprints, Flame, Skull, Sparkles, Trophy, Images,
-  Lock, LogIn, LogOut, User as UserIcon,
+  ArrowLeft, Trophy, Lock, LogIn, LogOut, User as UserIcon,
 } from "lucide-react"
 import Logo from "../components/layout/Logo"
 import ThemeToggle from "../components/layout/ThemeToggle"
 import { useAuth } from "../hooks/useAuth"
 import { useAchievements } from "../hooks/useAchievements"
 import { getLevel, toNextLevel } from "../lib/level"
-
-const ICONS = { Footprints, Flame, Skull, Sparkles, Trophy, Images }
+import { ACHIEVEMENT_ICONS } from "../lib/achievementIcons"
 
 function StatCard({ label, value }) {
   return (
@@ -117,7 +115,7 @@ export default function ProfilePage() {
           </p>
           <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
             {achievements.map((a) => {
-              const Icon = ICONS[a.icon] ?? Trophy
+              const Icon = ACHIEVEMENT_ICONS[a.icon] ?? Trophy
               return (
                 <div
                   key={a.id}

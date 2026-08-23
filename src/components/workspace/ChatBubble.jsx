@@ -24,7 +24,7 @@ export default function ChatBubble({ message, onRegenerate, isRegenerating }) {
           className="
             max-w-[80%]
             rounded-2xl rounded-br-md
-            bg-gradient-to-br from-primary to-primary/85
+            bg-linear-to-br from-primary to-primary/85
             px-4 py-3
             text-[15px] leading-6
             text-primary-foreground

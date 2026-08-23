@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 const STORAGE_KEY = "scenespeak_ai_settings"
 const defaultSettings = {
   provider: "gemini",
-  keys: { gemini: "", openai: "", sarvam: "" },
+  keys: { gemini: "", openai: "" },
 }
 
 export function useAiSettings() {

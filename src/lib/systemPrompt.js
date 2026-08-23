@@ -29,9 +29,6 @@ export function getSystemInstruction(tone = "roast") {
   return BASE_INSTRUCTION + (tone === "encourage" ? ENCOURAGE_TONE : ROAST_TONE);
 }
 
-// Kept for anything still importing the static default directly.
-export const SYSTEM_INSTRUCTION = getSystemInstruction("roast");
-
 // Appended ONLY for the user's very first message in a conversation (their
 // actual description attempt) — never for follow-ups, template clicks, or
 // regenerating a later reply. Two strict "last lines, exact format" rules

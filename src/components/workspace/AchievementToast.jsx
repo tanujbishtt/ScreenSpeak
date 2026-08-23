@@ -1,7 +1,6 @@
 import { useEffect } from "react"
-import { Footprints, Flame, Skull, Sparkles, Trophy, Images, X } from "lucide-react"
-
-const ICONS = { Footprints, Flame, Skull, Sparkles, Trophy, Images }
+import { X } from "lucide-react"
+import { ACHIEVEMENT_ICONS } from "../../lib/achievementIcons"
 
 function Toast({ achievement, onDismiss }) {
   useEffect(() => {
@@ -9,7 +8,7 @@ function Toast({ achievement, onDismiss }) {
     return () => clearTimeout(timer)
   }, [achievement.id, onDismiss])
 
-  const Icon = ICONS[achievement.icon] ?? Trophy
+  const Icon = ACHIEVEMENT_ICONS[achievement.icon] ?? ACHIEVEMENT_ICONS.Trophy
 
   return (
     <div
