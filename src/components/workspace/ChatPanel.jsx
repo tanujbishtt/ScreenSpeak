@@ -50,14 +50,8 @@ export default function ChatPanel({
             right here.
           </p>
         </div>
-      ) : (
-        <div
-          className={
-            isMobile
-              ? "flex flex-1 flex-col justify-end gap-4 p-5"
-              : "no-scrollbar flex min-h-0 flex-1 flex-col justify-end gap-4 overflow-y-auto p-5"
-          }
-        >
+      ) : isMobile ? (
+        <div className="flex flex-1 flex-col justify-end gap-4 p-5">
           {messages.map((message) => (
             <ChatBubble
               key={message.id}
@@ -68,6 +62,28 @@ export default function ChatPanel({
           ))}
           {isThinking && messages[messages.length - 1]?.role !== "assistant" && <TypingIndicator />}
           <div ref={bottomRef} />
+        </div>
+      ) : (
+        // `justify-end` + `overflow-y-auto` on the SAME element is a known
+        // flexbox bug — it eats into the scroll region and the top of the
+        // thread becomes unreachable (feels "not scrollable"). Fix: the
+        // scroll container itself stays plain top-to-bottom flex, and we
+        // push short threads to the bottom via `mt-auto` on an inner
+        // wrapper instead. Scrolling now always works, no matter how long
+        // the thread gets.
+        <div className="no-scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto p-5">
+          <div className="mt-auto flex flex-col gap-4">
+            {messages.map((message) => (
+              <ChatBubble
+                key={message.id}
+                message={message}
+                onRegenerate={() => onRegenerate(message.id)}
+                isRegenerating={regeneratingId === message.id}
+              />
+            ))}
+            {isThinking && messages[messages.length - 1]?.role !== "assistant" && <TypingIndicator />}
+            <div ref={bottomRef} />
+          </div>
         </div>
       )}
 

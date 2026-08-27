@@ -35,8 +35,10 @@ export default function ChatInput({ onSubmit, disabled }) {
         rounded-2xl border border-slate-200/60
         bg-white/60 backdrop-blur-3xl
         shadow-[0_10px_35px_rgba(0,0,0,0.08)]
-        transition-shadow
+        transition-all
+        focus-within:border-primary/40
         focus-within:shadow-[0_15px_45px_rgba(0,0,0,0.14)]
+        focus-within:ring-4 focus-within:ring-primary/10
         dark:border-white/10 dark:bg-white/5
         dark:shadow-[0_10px_35px_rgba(0,0,0,0.4)]
       "

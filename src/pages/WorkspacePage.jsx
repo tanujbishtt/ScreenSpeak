@@ -52,10 +52,32 @@ export default function WorkspacePage() {
 
   const bottomRef = useRef(null);
   const uploadedUrlRef = useRef(null);
+  const mobileScrollRef = useRef(null);
+  const [imageShrink, setImageShrink] = useState(0);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Sticky image header shrinks as the mobile page scrolls (Instagram/
+  // Twitter-style collapsing header). Only relevant on mobile — the desktop
+  // layout's image panel scrolls independently and isn't sticky at all.
+  useEffect(() => {
+    if (!isMobile) return;
+    const el = mobileScrollRef.current;
+    if (!el) return;
+    let ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setImageShrink(Math.min(el.scrollTop, 64));
+        ticking = false;
+      });
+    }
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [isMobile]);
 
   useEffect(() => {
     if (!sessionId) return;
@@ -79,6 +101,7 @@ export default function WorkspacePage() {
     setActiveTab(null);
     setSessionId(null);
     setSessionName("Untitled");
+    mobileScrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function handleSkip() {
@@ -330,14 +353,16 @@ async function handleRegenerate(messageId) {
 
       {isMobile ? (
         // MOBILE: one continuous scroll. Image is `sticky top-0` so it stays
-        // visible right under the navbar while the rest scrolls underneath it.
-        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+        // visible right under the navbar while the rest scrolls underneath it,
+        // shrinking a bit as you scroll (see the imageShrink scroll listener).
+        <div ref={mobileScrollRef} className="flex min-h-0 flex-1 flex-col overflow-y-auto">
           <div className="sticky top-0 z-10">
             <ImageMedia
               image={currentImage}
               onSkip={handleSkip}
               variant="sticky"
               isUploading={isUploadingImage}
+              shrink={imageShrink}
             />
           </div>
           <div className="bg-surface-muted/70 p-5">

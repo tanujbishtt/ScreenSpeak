@@ -74,9 +74,9 @@ export default function ChatBubble({ message, onRegenerate, isRegenerating }) {
             disabled={isRegenerating}
             className="
               -ml-2 mt-2.5 flex items-center gap-1.5 rounded-full
-              px-2 py-1 text-xs text-slate-500 transition
+              px-2 py-1 text-xs text-slate-500 transition-all
               hover:bg-surface-muted hover:text-slate-800
-              disabled:opacity-50
+              active:scale-90 disabled:opacity-50
               dark:text-slate-400 dark:hover:bg-white/5
               dark:hover:text-primary-foreground
             "

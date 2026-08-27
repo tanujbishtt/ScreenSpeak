@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import {
   ArrowLeft, Trophy, Lock, LogIn, LogOut, User as UserIcon,
@@ -8,10 +9,14 @@ import { useAuth } from "../hooks/useAuth"
 import { useAchievements } from "../hooks/useAchievements"
 import { getLevel, toNextLevel } from "../lib/level"
 import { ACHIEVEMENT_ICONS } from "../lib/achievementIcons"
+import { fireConfetti } from "../lib/confetti"
+import { playWhoosh } from "../lib/sound"
+
+const LAST_CELEBRATED_LEVEL_KEY = "scenespeak_last_celebrated_level"
 
 function StatCard({ label, value }) {
   return (
-    <div className="rounded-xl border border-border bg-surface/70 p-3.5 text-center">
+    <div className="rounded-xl border border-border bg-surface/70 p-3.5 text-center transition-transform active:scale-95">
       <p className="text-xl font-bold text-slate-900 dark:text-white">{value}</p>
       <p className="text-[11px] text-slate-500 dark:text-slate-400">{label}</p>
     </div>
@@ -26,6 +31,57 @@ export default function ProfilePage() {
   const remaining = toNextLevel(stats.totalDescribed)
   const progressInLevel = stats.totalDescribed % 5
   const unlockedCount = achievements.filter((a) => a.unlocked).length
+
+  // Small "arriving" cue on open — same whoosh already used for sending a
+  // chat message, reused here since it's a plain Web Audio synth (no file,
+  // no bundle cost) and works identically whether you're on mobile or desktop.
+  useEffect(() => {
+    playWhoosh()
+  }, [])
+
+  // Level number counts up from 1 to `level` on mount instead of just
+  // popping in — same idea as the ScoreRing counter in the workspace chat.
+  const [displayLevel, setDisplayLevel] = useState(1)
+  useEffect(() => {
+    if (level <= 1) {
+      setDisplayLevel(level)
+      return
+    }
+    let frame
+    const start = performance.now()
+    const DURATION = 600
+    function tick(now) {
+      const progress = Math.min((now - start) / DURATION, 1)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setDisplayLevel(Math.max(1, Math.round(1 + eased * (level - 1))))
+      if (progress < 1) frame = requestAnimationFrame(tick)
+    }
+    frame = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frame)
+  }, [level])
+
+  // Confetti the first time this page is viewed after leveling up. We
+  // remember the last level we celebrated in localStorage so it only fires
+  // once per level, not on every profile visit.
+  const hasCelebrated = useRef(false)
+  useEffect(() => {
+    if (hasCelebrated.current) return
+    const lastCelebrated = Number(localStorage.getItem(LAST_CELEBRATED_LEVEL_KEY) ?? 1)
+    if (level > lastCelebrated) {
+      hasCelebrated.current = true
+      fireConfetti()
+      localStorage.setItem(LAST_CELEBRATED_LEVEL_KEY, String(level))
+    }
+  }, [level])
+
+  // Tapping a card gives feedback either way: locked shakes (a "not yet"
+  // no), unlocked replays its unlock pop (a little celebratory reminder).
+  const [tappedId, setTappedId] = useState(null)
+
+  function handleAchievementTap(id) {
+    setTappedId(id)
+    window.setTimeout(() => setTappedId(null), 500)
+  }
 
   return (
     <div className="min-h-screen bg-canvas">
@@ -87,7 +143,7 @@ export default function ProfilePage() {
         {/* Level progress */}
         <div className="mb-6 rounded-2xl border border-border bg-surface/70 p-5">
           <div className="mb-2 flex items-baseline justify-between">
-            <p className="text-lg font-bold text-slate-900 dark:text-white">Level {level}</p>
+            <p className="text-lg font-bold text-slate-900 dark:text-white">Level {displayLevel}</p>
             <p className="text-xs text-slate-500 dark:text-slate-400">
               {remaining} more to Level {level + 1}
             </p>
@@ -119,9 +175,10 @@ export default function ProfilePage() {
               return (
                 <div
                   key={a.id}
-                  className={`flex items-center gap-3 rounded-xl border border-border bg-surface/70 p-3.5 ${
+                  onClick={() => handleAchievementTap(a.id)}
+                  className={`flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-surface/70 p-3.5 transition-transform active:scale-[0.98] ${
                     a.unlocked ? "" : "opacity-40"
-                  }`}
+                  } ${tappedId === a.id ? (a.unlocked ? "animate-achievement-in" : "animate-shake") : ""}`}
                 >
                   <div
                     className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${

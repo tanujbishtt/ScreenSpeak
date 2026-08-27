@@ -15,7 +15,7 @@ export default function ImageReference({
   const isCurated = Boolean(image.vocab)
 
   const tabButtonClass = (tab) =>
-    `px-3 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+    `px-3 py-2 text-sm font-medium border-b-2 transition-all active:scale-90 whitespace-nowrap ${
       activeTab === tab
         ? "border-primary text-primary"
         : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
@@ -120,8 +120,8 @@ export default function ImageReference({
               className="
                 shrink-0 whitespace-nowrap rounded-full border border-border
                 bg-surface/70 px-4 py-1.5 text-sm font-medium text-slate-600
-                shadow-sm transition-all hover:scale-105
-                hover:border-slate-400 hover:bg-surface
+                shadow-sm transition-transform hover:scale-105
+                hover:border-slate-400 hover:bg-surface active:scale-90
                 dark:border-white/10 dark:bg-white/5 dark:text-slate-300
                 dark:hover:bg-white/10
               "

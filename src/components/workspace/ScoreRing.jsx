@@ -21,6 +21,15 @@ export default function ScoreRing({ score }) {
     let frame
     const start = performance.now()
 
+    // Great score (80+) gets a short vibration pattern timed with the ring
+    // finishing its sweep — lands alongside the confetti WorkspacePage
+    // already fires, so both "hits" feel like one moment. Silently does
+    // nothing on browsers/devices without vibration support (e.g. iOS
+    // Safari) — navigator.vibrate just won't exist there.
+    if (score >= 80 && navigator.vibrate) {
+      window.setTimeout(() => navigator.vibrate([40, 30, 60]), ANIMATION_MS)
+    }
+
     function tick(now) {
       const progress = Math.min((now - start) / ANIMATION_MS, 1)
       const eased = 1 - Math.pow(1 - progress, 3) // ease-out cubic

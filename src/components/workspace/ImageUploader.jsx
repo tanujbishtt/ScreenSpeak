@@ -34,8 +34,8 @@ export default function ImageUploader({ onUpload }) {
         onClick={() => inputRef.current?.click()}
         className="
           flex items-center gap-1.5 px-3 py-2 text-sm font-medium
-          text-slate-500 transition-colors hover:text-slate-800
-          dark:text-slate-400 dark:hover:text-white
+          text-slate-500 transition-all hover:text-slate-800
+          active:scale-90 dark:text-slate-400 dark:hover:text-white
         "
         aria-label="Upload your own image"
         title="Upload your own image"
