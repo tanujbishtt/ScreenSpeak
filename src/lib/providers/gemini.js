@@ -1,10 +1,14 @@
 import { imageUrlToBase64 } from "../imageToBase64"
 import { getSystemInstruction, SCORE_INSTRUCTION } from "../systemPrompt"
 import { extractScore } from "../extractScore"
+import { readSSE } from "../sse"
 
 const MODEL = "gemini-3.6-flash"
 
-export async function askGemini({ apiKey, imageUrl, history, requestScore, tone }) {
+// onDelta(deltaText) fires for each new chunk of text as it streams in,
+// so the caller can grow the chat bubble live. Final return value is
+// still { text, score, corrected } exactly like before.
+export async function askGemini({ apiKey, imageUrl, history, requestScore, tone, onDelta }) {
   if (!apiKey) throw new Error("No Gemini API key set")
 
   const { base64, mimeType } = await imageUrlToBase64(imageUrl)
@@ -18,7 +22,7 @@ export async function askGemini({ apiKey, imageUrl, history, requestScore, tone 
   const systemText = getSystemInstruction(tone) + (requestScore ? SCORE_INSTRUCTION : "")
 
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:streamGenerateContent?alt=sse`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
@@ -34,8 +38,15 @@ export async function askGemini({ apiKey, imageUrl, history, requestScore, tone 
     throw new Error(errorBody?.error?.message || `Gemini request failed (${response.status})`)
   }
 
-  const data = await response.json()
-  const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text
-  if (!rawText) throw new Error("Gemini returned an empty response")
-  return extractScore(rawText)
+  let fullText = ""
+  for await (const chunk of readSSE(response)) {
+    const delta = chunk.candidates?.[0]?.content?.parts?.[0]?.text
+    if (delta) {
+      fullText += delta
+      onDelta?.(delta)
+    }
+  }
+
+  if (!fullText) throw new Error("Gemini returned an empty response")
+  return extractScore(fullText)
 }

@@ -22,3 +22,13 @@ export function extractScore(rawText) {
 
   return { text: rawText.trim(), score: null, corrected: null }
 }
+
+// Used only while a response is actively streaming: hides the trailing
+// "CORRECTED: ... / SCORE: N" block the moment it starts appearing, so
+// the user never sees those raw instruction-following lines flash on
+// screen before extractScore() properly splits them out once the full
+// response has arrived.
+export function stripScoreBlockForDisplay(text) {
+  const idx = text.search(/\n?CORRECTED:/i)
+  return idx === -1 ? text : text.slice(0, idx).trimEnd()
+}

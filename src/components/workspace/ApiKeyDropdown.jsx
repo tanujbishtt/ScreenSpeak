@@ -6,6 +6,7 @@ import { useAiSettings } from "../../hooks/useAiSettings"
 const PROVIDERS = [
   { id: "gemini", label: "Gemini", keyHint: "AIzaSy...", keyUrl: "https://aistudio.google.com/apikey" },
   { id: "openai", label: "ChatGPT", keyHint: "sk-...", keyUrl: "https://platform.openai.com/api-keys" },
+  { id: "claude", label: "Claude", keyHint: "sk-ant-...", keyUrl: "https://console.anthropic.com/settings/keys" },
 ]
 
 export default function ApiKeyDropdown() {

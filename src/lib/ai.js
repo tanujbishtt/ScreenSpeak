@@ -1,7 +1,8 @@
 import { askGemini } from "./providers/gemini"
 import { askOpenAI } from "./providers/openai"
+import { askClaude } from "./providers/claude"
 
-const providers = { gemini: askGemini, openai: askOpenAI }
+const providers = { gemini: askGemini, openai: askOpenAI, claude: askClaude }
 
 export async function askAI(provider, params) {
   const fn = providers[provider]

@@ -66,7 +66,7 @@ export default function ChatPanel({
               isRegenerating={regeneratingId === message.id}
             />
           ))}
-          {isThinking && <TypingIndicator />}
+          {isThinking && messages[messages.length - 1]?.role !== "assistant" && <TypingIndicator />}
           <div ref={bottomRef} />
         </div>
       )}

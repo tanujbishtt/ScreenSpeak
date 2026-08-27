@@ -1,10 +1,11 @@
 import { imageUrlToBase64 } from "../imageToBase64"
 import { getSystemInstruction, SCORE_INSTRUCTION } from "../systemPrompt"
 import { extractScore } from "../extractScore"
+import { readSSE } from "../sse"
 
 const MODEL = "gpt-5.6"
 
-export async function askOpenAI({ apiKey, imageUrl, history, requestScore, tone }) {
+export async function askOpenAI({ apiKey, imageUrl, history, requestScore, tone, onDelta }) {
   if (!apiKey) throw new Error("No OpenAI API key set")
 
   const { base64, mimeType } = await imageUrlToBase64(imageUrl)
@@ -30,7 +31,7 @@ export async function askOpenAI({ apiKey, imageUrl, history, requestScore, tone 
   const response = await fetch("/api/openai/v1/chat/completions", {
     method: "POST",
     headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
-    body: JSON.stringify({ model: MODEL, messages }),
+    body: JSON.stringify({ model: MODEL, messages, stream: true }),
   })
 
   if (!response.ok) {
@@ -38,8 +39,15 @@ export async function askOpenAI({ apiKey, imageUrl, history, requestScore, tone 
     throw new Error(errorBody?.error?.message || `OpenAI request failed (${response.status})`)
   }
 
-  const data = await response.json()
-  const rawText = data.choices?.[0]?.message?.content
-  if (!rawText) throw new Error("OpenAI returned an empty response")
-  return extractScore(rawText)
+  let fullText = ""
+  for await (const chunk of readSSE(response)) {
+    const delta = chunk.choices?.[0]?.delta?.content
+    if (delta) {
+      fullText += delta
+      onDelta?.(delta)
+    }
+  }
+
+  if (!fullText) throw new Error("OpenAI returned an empty response")
+  return extractScore(fullText)
 }

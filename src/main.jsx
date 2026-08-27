@@ -3,13 +3,16 @@ import { BrowserRouter } from "react-router-dom";
 
 import App from "./App";
 import { ThemeProvider } from "./context/ThemeContext";
+import { AiSettingsProvider } from "./context/AiSettingsContext";
 
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <ThemeProvider>
-      <App />
+      <AiSettingsProvider>
+        <App />
+      </AiSettingsProvider>
     </ThemeProvider>
   </BrowserRouter>
 );
