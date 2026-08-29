@@ -1,9 +1,10 @@
+import { memo } from "react"
 import { RotateCcw, Sparkles } from "lucide-react"
 import Logo from "../layout/Logo"
 import ScoreRing from "./ScoreRing"
 import DiffView from "./DiffView"
 
-export default function ChatBubble({ message, onRegenerate, isRegenerating }) {
+function ChatBubble({ message, onRegenerate, isRegenerating }) {
   const { role, content, isTemplate, displayLabel, canRegenerate, score, corrected, originalText } = message
 
   if (role === "user" && isTemplate) {
@@ -89,3 +90,5 @@ export default function ChatBubble({ message, onRegenerate, isRegenerating }) {
     </div>
   )
 }
+
+export default memo(ChatBubble)

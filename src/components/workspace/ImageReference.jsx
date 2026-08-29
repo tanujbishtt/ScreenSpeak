@@ -1,9 +1,10 @@
-import { BookOpen, Lightbulb, Sparkles } from "lucide-react"
-import { promptTemplates } from "../../data/promptTemplates"
+import { BookOpen, Lightbulb } from "lucide-react"
+import { promptTemplates, referenceTemplates } from "../../data/promptTemplates"
 import ImageUploader from "./ImageUploader"
 
 // props:
-//   image, activeTab, setActiveTab, hasDescribed, onUpload, onTemplateClick
+//   image, activeTab, setActiveTab, hasDescribed, onUpload, onTemplateClick,
+//   onReferenceClick
 export default function ImageReference({
   image,
   activeTab,
@@ -11,6 +12,7 @@ export default function ImageReference({
   hasDescribed,
   onUpload,
   onTemplateClick,
+  onReferenceClick,
 }) {
   const isCurated = Boolean(image.vocab)
 
@@ -48,16 +50,6 @@ export default function ImageReference({
                   Solution
                 </span>
               </button>
-
-              <button
-                onClick={() => setActiveTab(activeTab === "reference" ? null : "reference")}
-                className={tabButtonClass("reference")}
-              >
-                <span className="flex items-center gap-1.5">
-                  <Sparkles size={14} />
-                  Reference Styles
-                </span>
-              </button>
             </>
           )}
         </div>
@@ -85,23 +77,6 @@ export default function ImageReference({
               {image.solution}
             </div>
           )}
-
-          {activeTab === "reference" && (
-            <div className="mb-4 flex flex-col gap-3 text-sm">
-              <div>
-                <p className="mb-1 font-semibold text-slate-900 dark:text-white">Native way</p>
-                <p className="text-slate-700 dark:text-slate-300">{image.nativeWay}</p>
-              </div>
-              <div>
-                <p className="mb-1 font-semibold text-slate-900 dark:text-white">Gen-Z way</p>
-                <p className="text-slate-700 dark:text-slate-300">{image.genZWay}</p>
-              </div>
-              <div>
-                <p className="mb-1 font-semibold text-slate-900 dark:text-white">Shakespearean way</p>
-                <p className="text-slate-700 dark:text-slate-300">{image.shakesparean}</p>
-              </div>
-            </div>
-          )}
         </>
       )}
 
@@ -112,9 +87,9 @@ export default function ImageReference({
         </p>
       )}
 
-      {/* Template chips: horizontal scroll strip, NEVER wraps. This is the
-          key fix — previously these wrapped onto 2-3 lines and pushed the
-          chat panel down out of view on mobile. */}
+      {/* Template chips: horizontal scroll strip, NEVER wraps. Reference
+          chips (native/genz/shakespearean) only show for curated images,
+          since only those have the authored fields to read from. */}
       {hasDescribed && (
         <div className="flex-wrap no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pt-2">
           {promptTemplates.map((template) => (
@@ -133,6 +108,24 @@ export default function ImageReference({
               {template.label}
             </button>
           ))}
+
+          {isCurated &&
+            referenceTemplates.map((template) => (
+              <button
+                key={template.id}
+                onClick={() => onReferenceClick(template)}
+                className="
+                  shrink-0 whitespace-nowrap rounded-full border border-border
+                  bg-surface/70 px-4 py-1.5 text-sm font-medium text-slate-600
+                  shadow-sm transition-transform hover:scale-105
+                  hover:border-slate-400 hover:bg-surface active:scale-90
+                  dark:border-white/10 dark:bg-white/5 dark:text-slate-300
+                  dark:hover:bg-white/10
+                "
+              >
+                {template.label}
+              </button>
+            ))}
         </div>
       )}
     </div>

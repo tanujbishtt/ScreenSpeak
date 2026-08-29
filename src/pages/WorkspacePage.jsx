@@ -228,45 +228,53 @@ export default function WorkspacePage() {
     }
   }
 
-async function handleRegenerate(messageId) {
-  const index = messages.findIndex((m) => m.id === messageId)
-  if (index === -1) return
+  async function handleRegenerate(messageId) {
+    const index = messages.findIndex((m) => m.id === messageId);
+    if (index === -1) return;
 
-  const historyBefore = messages.slice(0, index)
-  const requestScore = index === 1 // the very first assistant reply is the only scored one
-  setRegeneratingId(messageId)
+    const historyBefore = messages.slice(0, index);
+    const requestScore = index === 1; // the very first assistant reply is the only scored one
+    setRegeneratingId(messageId);
 
-  let acc = ""
-  function handleDelta(delta) {
-    acc += delta
-    updateMessage(messageId, { content: stripScoreBlockForDisplay(acc) })
+    let acc = "";
+    function handleDelta(delta) {
+      acc += delta;
+      updateMessage(messageId, { content: stripScoreBlockForDisplay(acc) });
+    }
+
+    try {
+      const reply = await askAI(provider, {
+        apiKey,
+        imageUrl: currentImage.url,
+        history: historyBefore.map((m) => ({
+          role: m.role,
+          content: m.content,
+        })),
+        requestScore,
+        tone,
+        onDelta: handleDelta,
+      });
+      const originalText = requestScore
+        ? historyBefore[historyBefore.length - 1]?.content
+        : undefined;
+
+      updateMessage(messageId, {
+        content: reply.text,
+        score: reply.score,
+        corrected: reply.corrected,
+        originalText,
+      });
+
+      if (requestScore && typeof reply.score === "number" && reply.score >= 80)
+        fireConfetti();
+    } catch (err) {
+      updateMessage(messageId, {
+        content: `Something went wrong: ${err.message}`,
+      });
+    } finally {
+      setRegeneratingId(null);
+    }
   }
-
-  try {
-    const reply = await askAI(provider, {
-      apiKey,
-      imageUrl: currentImage.url,
-      history: historyBefore.map((m) => ({ role: m.role, content: m.content })),
-      requestScore,
-      tone,
-      onDelta: handleDelta,
-    })
-    const originalText = requestScore ? historyBefore[historyBefore.length - 1]?.content : undefined
-
-    updateMessage(messageId, {
-      content: reply.text,
-      score: reply.score,
-      corrected: reply.corrected,
-      originalText,
-    })
-
-    if (requestScore && typeof reply.score === "number" && reply.score >= 80) fireConfetti()
-  } catch (err) {
-    updateMessage(messageId, { content: `Something went wrong: ${err.message}` })
-  } finally {
-    setRegeneratingId(null)
-  }
-}
 
   function handleUserMessage(text) {
     const isFirstAttempt = !hasDescribed;
@@ -278,12 +286,19 @@ async function handleRegenerate(messageId) {
     callAI(template.prompt, { isTemplate: true, displayLabel: template.label });
   }
 
-  // Wraps setActiveTab so opening the Native/Gen-Z reference tab also
-  // counts toward the "Native Curious" achievement — ImageReference.jsx
-  // itself needs zero changes, it just calls whatever setter it's given.
-  function handleSetActiveTab(next) {
-    setActiveTab(next);
-    if (next === "reference") recordReferenceView();
+  function handleReferenceClick(template) {
+    addMessage({
+      role: "user",
+      content: template.label,
+      isTemplate: true,
+      displayLabel: template.label,
+    });
+    addMessage({
+      role: "assistant",
+      content: currentImage[template.field],
+      canRegenerate: false,
+    });
+    recordReferenceView();
   }
 
   function handleRenameSession(newName) {
@@ -368,7 +383,10 @@ async function handleRegenerate(messageId) {
         // MOBILE: one continuous scroll. Image is `sticky top-0` so it stays
         // visible right under the navbar while the rest scrolls underneath it,
         // shrinking a bit as you scroll (see the imageShrink scroll listener).
-        <div ref={mobileScrollRef} className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+        <div
+          ref={mobileScrollRef}
+          className="flex min-h-0 flex-1 flex-col overflow-y-auto"
+        >
           <div className="sticky top-0 z-10">
             <ImageMedia
               image={currentImage}
@@ -382,7 +400,8 @@ async function handleRegenerate(messageId) {
             <ImageReference
               image={currentImage}
               activeTab={activeTab}
-              setActiveTab={handleSetActiveTab}
+              setActiveTab={setActiveTab}
+              onReferenceClick={handleReferenceClick}
               hasDescribed={hasDescribed}
               onUpload={handleUpload}
               onTemplateClick={handleTemplateClick}
@@ -414,7 +433,8 @@ async function handleRegenerate(messageId) {
               <ImageReference
                 image={currentImage}
                 activeTab={activeTab}
-                setActiveTab={handleSetActiveTab}
+                setActiveTab={setActiveTab}
+                onReferenceClick={handleReferenceClick}
                 hasDescribed={hasDescribed}
                 onUpload={handleUpload}
                 onTemplateClick={handleTemplateClick}
