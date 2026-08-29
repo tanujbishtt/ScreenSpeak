@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { curatedImages } from "../data/curatedImages";
+import { getRandomCuratedImage } from "../lib/curatedImages";
 import ImageMedia from "../components/workspace/ImageMedia";
 import ImageReference from "../components/workspace/ImageReference";
 import ChatPanel from "../components/workspace/ChatPanel";
@@ -22,10 +22,6 @@ import AchievementToast from "../components/workspace/AchievementToast";
 import { uploadToCloudinary } from "../lib/uploadToCloudinary";
 import { stripScoreBlockForDisplay } from "../lib/extractScore";
 
-function getRandomCuratedImage() {
-  return curatedImages[Math.floor(Math.random() * curatedImages.length)];
-}
-
 export default function WorkspacePage() {
   const { provider, apiKey } = useAiSettings();
   const { sessions, upsertSession, deleteSession } = useSessions();
@@ -40,7 +36,7 @@ export default function WorkspacePage() {
     dismissUnlock,
   } = useAchievements();
 
-  const [currentImage, setCurrentImage] = useState(getRandomCuratedImage);
+  const [currentImage, setCurrentImage] = useState(null);
   const [messages, setMessages] = useState([]);
   const [hasDescribed, setHasDescribed] = useState(false);
   const [activeTab, setActiveTab] = useState(null);
@@ -58,6 +54,19 @@ export default function WorkspacePage() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Curated images now live in Firestore, not in the bundle — the very
+  // first image has to be fetched, unlike before when it was available
+  // synchronously as the initial state. Runs once on mount.
+  useEffect(() => {
+    let cancelled = false;
+    getRandomCuratedImage().then((image) => {
+      if (!cancelled) setCurrentImage(image);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Sticky image header shrinks as the mobile page scrolls (Instagram/
   // Twitter-style collapsing header). Only relevant on mobile — the desktop
@@ -104,10 +113,10 @@ export default function WorkspacePage() {
     mobileScrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function handleSkip() {
+  async function handleSkip() {
     revokeObjectUrl(uploadedUrlRef.current);
     uploadedUrlRef.current = null;
-    resetForNewImage(getRandomCuratedImage());
+    resetForNewImage(await getRandomCuratedImage());
   }
 
   async function handleUpload(file) {
@@ -351,7 +360,11 @@ async function handleRegenerate(messageId) {
 
       <AchievementToast unlocked={newlyUnlocked} onDismiss={dismissUnlock} />
 
-      {isMobile ? (
+      {!currentImage ? (
+        <div className="flex flex-1 items-center justify-center text-sm text-slate-500 dark:text-slate-400">
+          Loading a scene...
+        </div>
+      ) : isMobile ? (
         // MOBILE: one continuous scroll. Image is `sticky top-0` so it stays
         // visible right under the navbar while the rest scrolls underneath it,
         // shrinking a bit as you scroll (see the imageShrink scroll listener).

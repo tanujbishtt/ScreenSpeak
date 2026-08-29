@@ -55,7 +55,7 @@ export default function ImageReference({
               >
                 <span className="flex items-center gap-1.5">
                   <Sparkles size={14} />
-                  Native / Gen-Z
+                  Reference Styles
                 </span>
               </button>
             </>
@@ -95,6 +95,10 @@ export default function ImageReference({
               <div>
                 <p className="mb-1 font-semibold text-slate-900 dark:text-white">Gen-Z way</p>
                 <p className="text-slate-700 dark:text-slate-300">{image.genZWay}</p>
+              </div>
+              <div>
+                <p className="mb-1 font-semibold text-slate-900 dark:text-white">Shakespearean way</p>
+                <p className="text-slate-700 dark:text-slate-300">{image.shakesparean}</p>
               </div>
             </div>
           )}
