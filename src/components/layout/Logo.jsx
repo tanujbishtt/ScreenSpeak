@@ -4,20 +4,20 @@ export default function Logo({ size = 64 }) {
       width={size}
       height={size}
       viewBox="0 0 1024.00 1024.00"
-      class="icon"
+      className="icon"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
       fill="#000000"
       transform="matrix(1, 0, 0, 1, 0, 0)rotate(0)"
     >
-      <g id="SVGRepo_bgCarrier" stroke-width="0" />
+      <g id="SVGRepo_bgCarrier" strokeWidth="0" />
 
       <g
         id="SVGRepo_tracerCarrier"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         stroke="#CCCCCC"
-        stroke-width="4.096"
+        strokeWidth="4.096"
       />
 
       <g id="SVGRepo_iconCarrier">

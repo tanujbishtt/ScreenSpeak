@@ -33,7 +33,7 @@ export default function ImageMedia({
     <div
       className={
         isSticky
-          ? "relative overflow-hidden bg-cream transition-[height] duration-150 ease-out"
+          ? "relative overflow-hidden bg-cream-panel transition-[height] duration-150 ease-out"
           : "relative mb-4 overflow-hidden rounded-2xl border-2 border-ink shadow-brutal transition-[height] duration-200 ease-out"
       }
       style={{ height: `${isSticky ? stickyHeight : panelHeight}px` }}

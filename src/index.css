@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 @theme {
+  /* Flat palette */
   --color-cream: #fff9e9;      /* page background */
-  --color-cream-surface: #ffffff; /* card/panel background */
+  --color-cream-surface: #ffffff; /* elevated card/popover/bubble background */
+  --color-cream-panel: #eee; /* large low-luminance surfaces (workspace columns) */
   --color-ink: #000000;        /* borders, shadows, primary text */
   --color-ink-muted: #56534a;  /* secondary/body text on cream */
 
@@ -10,14 +12,17 @@
   --color-brut-orange: #fa7930;
   --color-brut-yellow: #ffca41;
 
+  /* Font */
   --font-display: "Baloo 2", ui-rounded, sans-serif;
 
-    badges/small controls, buttons/cards, and hero-level elements. */
+  /* Hard offset "sticker" shadows — no blur, flat drop. Three sizes cover
+     badges/small controls, buttons/cards, and hero-level elements. */
   --shadow-brutal-sm: 3px 3px 0 0 #000000;
   --shadow-brutal: 5px 5px 0 0 #000000;
   --shadow-brutal-lg: 8px 8px 0 0 #000000;
 
-    group of them doesn't bob in unison. */
+  /* Floating cutout images (hero collage) — three speeds/delays so a
+     group of them doesn't bob in unison. */
   --animate-float-slow: float 5s ease-in-out infinite;
   --animate-float-slower: float 6.5s ease-in-out infinite 0.3s;
   --animate-float-slowest: float 8s ease-in-out infinite 0.6s;
@@ -77,6 +82,13 @@
   }
 }
 
+/* Gentle vertical bob for the hero's floating cutout images. Deliberately
+   only animates translateY (no rotate) so it can be layered on an element
+   that already has a static rotate-* utility applied — combining a
+   keyframe transform with a utility transform on the SAME element would
+   have one silently overwrite the other, so each floating image should be
+   two nested elements: outer div carries the static rotate/position,
+   inner img carries animate-float-*. */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-14px); }

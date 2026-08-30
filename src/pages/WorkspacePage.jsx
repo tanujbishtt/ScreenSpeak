@@ -374,7 +374,7 @@ export default function WorkspacePage() {
               shrink={imageShrink}
             />
           </div>
-          <div className="border-b-2 border-ink bg-cream-surface p-5">
+          <div className="border-b-2 border-ink bg-cream-panel p-5">
             <ImageReference
               image={currentImage}
               activeTab={activeTab}
@@ -399,7 +399,7 @@ export default function WorkspacePage() {
         </div>
       ) : (
         <div className="flex min-h-0 flex-1 flex-row overflow-hidden">
-          <div className="flex w-1/2 flex-col border-r-2 border-ink bg-cream-surface">
+          <div className="flex w-1/2 flex-col border-r-2 border-ink bg-cream-panel">
             <div className="no-scrollbar flex-1 overflow-y-auto p-5">
               <ImageMedia
                 image={currentImage}

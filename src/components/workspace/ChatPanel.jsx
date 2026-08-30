@@ -18,9 +18,9 @@ export default function ChatPanel({
   const isMobile = variant === "mobile"
 
   return (
-    <div className={isMobile ? "flex flex-1 flex-col" : "flex min-h-0 w-1/2 flex-col bg-cream-surface"}>
+    <div className={isMobile ? "flex flex-1 flex-col" : "flex min-h-0 w-1/2 flex-col bg-cream-panel"}>
       <div
-        className={`flex items-center border-b-2 border-ink bg-cream-surface px-5 py-2.5 ${
+        className={`flex items-center border-b-2 border-ink bg-cream-panel px-5 py-2.5 ${
           isMobile ? "justify-end" : "justify-between"
         }`}
       >
@@ -77,8 +77,8 @@ export default function ChatPanel({
       <div
         className={
           isMobile
-            ? "sticky bottom-0 border-t-2 border-ink bg-cream p-3"
-            : "border-t-2 border-ink bg-cream p-4"
+            ? "sticky bottom-0 border-t-2 border-ink bg-cream-panel p-3"
+            : "border-t-2 border-ink bg-cream-panel p-4"
         }
       >
         <ChatInput onSubmit={onSubmit} disabled={isThinking} />
