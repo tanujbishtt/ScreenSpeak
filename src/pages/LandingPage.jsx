@@ -1,4 +1,4 @@
-import HeroSection from "../components/landing/hero";
+import HeroSection from "../components/landing/Hero";
 import HowItWorks from "../components/landing/HowItWorks";
 import Features from "../components/landing/Features";
 
