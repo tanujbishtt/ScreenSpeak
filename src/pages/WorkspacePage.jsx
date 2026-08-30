@@ -7,7 +7,6 @@ import ChatPanel from "../components/workspace/ChatPanel";
 import SessionDropdown from "../components/workspace/SessionDropdown";
 import Logo from "../components/layout/Logo";
 import { GithubIcon } from "../components/icons/BrandIcons";
-import ThemeToggle from "../components/layout/ThemeToggle";
 import ApiKeyDropdown from "../components/workspace/ApiKeyDropdown";
 import ProfileMenu from "../components/workspace/ProfileMenu";
 import { askAI } from "../lib/ai";
@@ -55,9 +54,6 @@ export default function WorkspacePage() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Curated images now live in Firestore, not in the bundle — the very
-  // first image has to be fetched, unlike before when it was available
-  // synchronously as the initial state. Runs once on mount.
   useEffect(() => {
     let cancelled = false;
     getRandomCuratedImage().then((image) => {
@@ -68,9 +64,6 @@ export default function WorkspacePage() {
     };
   }, []);
 
-  // Sticky image header shrinks as the mobile page scrolls (Instagram/
-  // Twitter-style collapsing header). Only relevant on mobile — the desktop
-  // layout's image panel scrolls independently and isn't sticky at all.
   useEffect(() => {
     if (!isMobile) return;
     const el = mobileScrollRef.current;
@@ -129,9 +122,6 @@ export default function WorkspacePage() {
     setIsUploadingImage(true);
     try {
       const cloudUrl = await uploadToCloudinary(file);
-      // Only swap the URL in if the user is STILL on this same upload —
-      // they might've hit Skip or picked something else while this was
-      // in flight, in which case we just let the result drop silently.
       setCurrentImage((prev) =>
         prev.id === localId ? { ...prev, url: cloudUrl } : prev,
       );
@@ -142,8 +132,6 @@ export default function WorkspacePage() {
         "Cloudinary upload failed, image stays local-only for this tab:",
         err,
       );
-      // Not fatal — blob URL still works for the current tab session,
-      // it just won't survive a reload/session-resume. No need to block.
     } finally {
       setIsUploadingImage(false);
     }
@@ -194,9 +182,6 @@ export default function WorkspacePage() {
       });
 
       if (assistantId === null) {
-        // Stream produced no incremental chunks (rare provider hiccup) —
-        // fall back to adding the full reply in one shot instead of
-        // silently losing the assistant's message.
         assistantId = addMessage({ role: "assistant", content: reply.text });
       }
 
@@ -233,7 +218,7 @@ export default function WorkspacePage() {
     if (index === -1) return;
 
     const historyBefore = messages.slice(0, index);
-    const requestScore = index === 1; // the very first assistant reply is the only scored one
+    const requestScore = index === 1;
     setRegeneratingId(messageId);
 
     let acc = "";
@@ -321,17 +306,14 @@ export default function WorkspacePage() {
     setSessionName(session.name);
   }
 
-  // Bug fix: deleting the session you're currently IN used to leave you
-  // staring at a dead session. If the deleted id matches the active one,
-  // fall through to the same reset a "New session" click does.
   function handleDeleteSession(id) {
     deleteSession(id);
     if (id === sessionId) handleSkip();
   }
 
   return (
-    <div className="flex h-screen w-full flex-col overflow-hidden bg-canvas">
-      <div className="relative z-50 flex h-14 shrink-0 items-center border-b border-border bg-canvas/85 px-4 backdrop-blur-xl">
+    <div className="flex h-screen w-full flex-col overflow-hidden bg-cream">
+      <div className="relative z-50 flex h-14 shrink-0 items-center border-b-2 border-ink bg-cream px-4">
         <div className="flex flex-1 items-center">
           <Link
             to="/"
@@ -364,25 +346,21 @@ export default function WorkspacePage() {
             href="https://github.com/tanujbishtt/ScreenSpeak"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden items-center gap-1.5 rounded-full border border-border bg-surface/60 px-2.5 py-1.5 text-sm text-slate-600 transition hover:border-slate-400 hover:bg-surface sm:flex dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10"
+            className="hidden items-center gap-1.5 rounded-full border-2 border-ink bg-cream-surface px-2.5 py-1.5 font-display text-sm font-medium text-ink shadow-brutal-sm transition-all hover:-translate-y-0.5 sm:flex"
           >
             <GithubIcon size={14} />
             <span className="hidden sm:inline">Star</span>
           </a>
-          <ThemeToggle className="text-slate-600 hover:bg-black/5 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white" />
         </div>
       </div>
 
       <AchievementToast unlocked={newlyUnlocked} onDismiss={dismissUnlock} />
 
       {!currentImage ? (
-        <div className="flex flex-1 items-center justify-center text-sm text-slate-500 dark:text-slate-400">
+        <div className="flex flex-1 items-center justify-center font-display text-sm text-ink-muted">
           Loading a scene...
         </div>
       ) : isMobile ? (
-        // MOBILE: one continuous scroll. Image is `sticky top-0` so it stays
-        // visible right under the navbar while the rest scrolls underneath it,
-        // shrinking a bit as you scroll (see the imageShrink scroll listener).
         <div
           ref={mobileScrollRef}
           className="flex min-h-0 flex-1 flex-col overflow-y-auto"
@@ -396,7 +374,7 @@ export default function WorkspacePage() {
               shrink={imageShrink}
             />
           </div>
-          <div className="bg-surface-muted/70 p-5">
+          <div className="border-b-2 border-ink bg-cream-surface p-5">
             <ImageReference
               image={currentImage}
               activeTab={activeTab}
@@ -420,9 +398,8 @@ export default function WorkspacePage() {
           />
         </div>
       ) : (
-        // DESKTOP: original two-column layout, each side scrolls independently.
         <div className="flex min-h-0 flex-1 flex-row overflow-hidden">
-          <div className="flex w-1/2 flex-col border-r border-border bg-surface-muted/70">
+          <div className="flex w-1/2 flex-col border-r-2 border-ink bg-cream-surface">
             <div className="no-scrollbar flex-1 overflow-y-auto p-5">
               <ImageMedia
                 image={currentImage}

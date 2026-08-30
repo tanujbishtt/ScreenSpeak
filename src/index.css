@@ -1,48 +1,6 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
-
 @theme {
-  /* Core */
-  --color-primary: #2584a7;
-  --color-primary-hover: #24e5d2;
-  --color-canvas: #fff8e9;
-  --color-primary-foreground: #ffffff;
-
-  /* Surfaces */
-  --color-surface: #fffdf7;
-  --color-surface-muted: #f8f3e8;
-  --color-border: #d8d1c3;
-
-  /* Gradient glows */
-  --color-glow-peach: #fe6d73;
-  --color-glow-amber: #ffcb77;
-  --color-glow-teal: #24e5d2;
-  --color-glow-blue: #2584a7;
-  --color-glow-violet: #8b7cf6;
-
-  --animate-shake: shake 0.4s ease-in-out;
-  --animate-drift-1: drift-1 18s ease-in-out infinite;
-  --animate-drift-2: drift-2 22s ease-in-out infinite;
-  --animate-drift-3: drift-3 20s ease-in-out infinite;
-  --animate-message-in: message-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
-  --animate-achievement-in: achievement-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  --animate-score-in: score-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  --animate-theme-pop: theme-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
-
-/* ==========================================================================
-   Brutalist landing theme — new design system, scoped to the landing page
-   rebuild. Kept separate from the legacy tokens above on purpose: those are
-   still driving Workspace/Profile (which haven't been redesigned yet), so
-   we're not touching them. Once the rest of the app gets this treatment,
-   the legacy block above can go away and these become "the" theme.
-
-   Palette was sampled directly from the inspo screenshot's actual pixels,
-   not eyeballed.
-   ========================================================================== */
-@theme {
-  /* Flat palette */
   --color-cream: #fff9e9;      /* page background */
   --color-cream-surface: #ffffff; /* card/panel background */
   --color-ink: #000000;        /* borders, shadows, primary text */
@@ -52,20 +10,22 @@
   --color-brut-orange: #fa7930;
   --color-brut-yellow: #ffca41;
 
-  /* Font */
   --font-display: "Baloo 2", ui-rounded, sans-serif;
 
-  /* Hard offset "sticker" shadows — no blur, flat drop. Three sizes cover
-     badges/small controls, buttons/cards, and hero-level elements. */
+    badges/small controls, buttons/cards, and hero-level elements. */
   --shadow-brutal-sm: 3px 3px 0 0 #000000;
   --shadow-brutal: 5px 5px 0 0 #000000;
   --shadow-brutal-lg: 8px 8px 0 0 #000000;
 
-  /* Floating cutout images (hero collage) — three speeds/delays so a
-     group of them doesn't bob in unison. */
+    group of them doesn't bob in unison. */
   --animate-float-slow: float 5s ease-in-out infinite;
   --animate-float-slower: float 6.5s ease-in-out infinite 0.3s;
   --animate-float-slowest: float 8s ease-in-out infinite 0.6s;
+
+  --animate-shake: shake 0.4s ease-in-out;
+  --animate-message-in: message-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-achievement-in: achievement-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-score-in: score-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 @keyframes shake {
@@ -117,66 +77,9 @@
   }
 }
 
-@keyframes theme-pop {
-  0% {
-    opacity: 0;
-    transform: scale(0.4) rotate(-90deg);
-  }
-  60% {
-    opacity: 1;
-    transform: scale(1.25) rotate(10deg);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
-  }
-}
-
-@keyframes drift-1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(40px, -30px) scale(1.1); }
-}
-@keyframes drift-2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(-30px, 40px) scale(1.05); }
-}
-@keyframes drift-3 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(20px, 20px) scale(1.08); }
-}
-
-/* Gentle vertical bob for the hero's floating cutout images. Deliberately
-   only animates translateY (no rotate) so it can be layered on an element
-   that already has a static rotate-* utility applied — combining a
-   keyframe transform with a utility transform on the SAME element would
-   have one silently overwrite the other, so each floating image should be
-   two nested elements: outer div carries the static rotate/position,
-   inner img carries animate-float-*. */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-14px); }
-}
-
-
-.dark {
-  /* Core — soft teal accent stays calming, but base tones are now true
-     neutral grey (equal-ish RGB), no warm brown or cool blue tint */
-  --color-primary: #7dd3bf;
-  --color-primary-hover: #9ce0cf;
-  --color-canvas: #1e1e1e;
-  --color-primary-foreground: #1e1e1e;
-
-  /* Surfaces — neutral charcoal, not tinted */
-  --color-surface: #272727;
-  --color-surface-muted: #232323;
-  --color-border: #3d3d3d;
-
-  /* Gradient glows — kept vivid for the landing page background */
-  --color-glow-peach: #ff8f7a;
-  --color-glow-amber: #ffc978;
-  --color-glow-teal: #6ee7d4;
-  --color-glow-blue: #60a5c9;
-  --color-glow-violet: #a78bfa;
 }
 
 html {
@@ -196,14 +99,4 @@ html::-webkit-scrollbar {
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
-}
-
-/* Seamless light/dark switch: every element cross-fades its colors instead
-   of hard-cutting when the `dark` class toggles on <html>. Elements that
-   already have their own `transition` utility (hover states etc.) still
-   win for those properties — a class selector beats this universal one —
-   this is just the fallback that catches everything else. */
-*, *::before, *::after {
-  transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease,
-    fill 0.4s ease, stroke 0.4s ease;
 }

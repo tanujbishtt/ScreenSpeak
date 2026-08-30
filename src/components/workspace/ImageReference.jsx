@@ -2,9 +2,6 @@ import { BookOpen, Lightbulb } from "lucide-react"
 import { promptTemplates, referenceTemplates } from "../../data/promptTemplates"
 import ImageUploader from "./ImageUploader"
 
-// props:
-//   image, activeTab, setActiveTab, hasDescribed, onUpload, onTemplateClick,
-//   onReferenceClick
 export default function ImageReference({
   image,
   activeTab,
@@ -17,17 +14,15 @@ export default function ImageReference({
   const isCurated = Boolean(image.vocab)
 
   const tabButtonClass = (tab) =>
-    `px-3 py-2 text-sm font-medium border-b-2 transition-all active:scale-90 whitespace-nowrap ${
+    `px-3 py-2 font-display text-sm font-medium border-b-2 transition-all active:scale-90 whitespace-nowrap ${
       activeTab === tab
-        ? "border-primary text-primary"
-        : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
+        ? "border-ink text-ink"
+        : "border-transparent text-ink-muted hover:text-ink"
     }`
 
   return (
     <div>
-      {/* Tab row scrolls horizontally too if it's ever too narrow (e.g. small
-          phones) — no-scrollbar keeps the scrollbar itself invisible. */}
-      <div className="no-scrollbar mb-4 flex items-center justify-between gap-2 overflow-x-auto border-b border-border">
+      <div className="no-scrollbar mb-4 flex items-center justify-between gap-2 overflow-x-auto border-b-2 border-ink">
         <div className="flex items-center gap-4">
           {isCurated && (
             <>
@@ -63,17 +58,17 @@ export default function ImageReference({
             <div className="mb-4 flex flex-col gap-2">
               {image.vocab.map((vocab) => (
                 <div key={vocab.word} className="text-sm">
-                  <span className="font-semibold text-slate-900 dark:text-white">
+                  <span className="font-display font-semibold text-ink">
                     {vocab.word}
                   </span>
-                  <span className="text-slate-500 dark:text-slate-400"> — {vocab.meaning}</span>
+                  <span className="text-ink-muted"> — {vocab.meaning}</span>
                 </div>
               ))}
             </div>
           )}
 
           {activeTab === "solution" && (
-            <div className="mb-4 text-sm text-slate-700 dark:text-slate-300">
+            <div className="mb-4 text-sm text-ink">
               {image.solution}
             </div>
           )}
@@ -81,15 +76,12 @@ export default function ImageReference({
       )}
 
       {!isCurated && (
-        <p className="mb-4 text-sm text-slate-500 dark:text-slate-400">
+        <p className="mb-4 text-sm text-ink-muted">
           This is your own uploaded image — no vocab/solution hints for it, but you can still get
           full AI feedback on your description below.
         </p>
       )}
 
-      {/* Template chips: horizontal scroll strip, NEVER wraps. Reference
-          chips (native/genz/shakespearean) only show for curated images,
-          since only those have the authored fields to read from. */}
       {hasDescribed && (
         <div className="flex-wrap no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pt-2">
           {promptTemplates.map((template) => (
@@ -97,12 +89,10 @@ export default function ImageReference({
               key={template.id}
               onClick={() => onTemplateClick(template)}
               className="
-                shrink-0 whitespace-nowrap rounded-full border border-border
-                bg-surface/70 px-4 py-1.5 text-sm font-medium text-slate-600
-                shadow-sm transition-transform hover:scale-105
-                hover:border-slate-400 hover:bg-surface active:scale-90
-                dark:border-white/10 dark:bg-white/5 dark:text-slate-300
-                dark:hover:bg-white/10
+                shrink-0 whitespace-nowrap rounded-full border-2 border-ink
+                bg-cream-surface px-4 py-1.5 font-display text-sm font-medium text-ink
+                shadow-brutal-sm transition-all hover:-translate-y-0.5
+                hover:shadow-brutal active:translate-y-0 active:shadow-brutal-sm
               "
             >
               {template.label}
@@ -115,12 +105,10 @@ export default function ImageReference({
                 key={template.id}
                 onClick={() => onReferenceClick(template)}
                 className="
-                  shrink-0 whitespace-nowrap rounded-full border border-border
-                  bg-surface/70 px-4 py-1.5 text-sm font-medium text-slate-600
-                  shadow-sm transition-transform hover:scale-105
-                  hover:border-slate-400 hover:bg-surface active:scale-90
-                  dark:border-white/10 dark:bg-white/5 dark:text-slate-300
-                  dark:hover:bg-white/10
+                  shrink-0 whitespace-nowrap rounded-full border-2 border-ink
+                  bg-cream-surface px-4 py-1.5 font-display text-sm font-medium text-ink
+                  shadow-brutal-sm transition-all hover:-translate-y-0.5
+                  hover:shadow-brutal active:translate-y-0 active:shadow-brutal-sm
                 "
               >
                 {template.label}

@@ -32,15 +32,11 @@ export default function ChatInput({ onSubmit, disabled }) {
     <div
       className="
         relative flex w-full items-end
-        rounded-2xl border border-slate-200/60
-        bg-white/60 backdrop-blur-3xl
-        shadow-[0_10px_35px_rgba(0,0,0,0.08)]
+        rounded-2xl border-2 border-ink
+        bg-cream-surface
+        shadow-brutal
         transition-all
-        focus-within:border-primary/40
-        focus-within:shadow-[0_15px_45px_rgba(0,0,0,0.14)]
-        focus-within:ring-4 focus-within:ring-primary/10
-        dark:border-white/10 dark:bg-white/5
-        dark:shadow-[0_10px_35px_rgba(0,0,0,0.4)]
+        focus-within:shadow-brutal-lg
       "
     >
       <textarea
@@ -54,10 +50,9 @@ export default function ChatInput({ onSubmit, disabled }) {
         className="
           no-scrollbar w-full resize-none
           bg-transparent px-4 py-3.5
-          text-[15px] leading-6 text-slate-900
+          text-[15px] leading-6 text-ink
           outline-none
-          placeholder:text-slate-400
-          dark:text-white dark:placeholder:text-slate-500
+          placeholder:text-ink-muted
         "
         style={{ maxHeight: "140px" }}
       />
@@ -68,9 +63,9 @@ export default function ChatInput({ onSubmit, disabled }) {
         className="
           m-2 flex h-9 w-9 shrink-0
           items-center justify-center rounded-full
-          bg-primary text-primary-foreground
-          shadow-md transition-transform
-          hover:scale-105 active:scale-95
+          border-2 border-ink bg-ink text-cream
+          shadow-brutal-sm transition-all
+          hover:-translate-y-0.5 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none
           disabled:pointer-events-none disabled:opacity-40
         "
         aria-label="Send message"

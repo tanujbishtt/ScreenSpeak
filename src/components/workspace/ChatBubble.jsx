@@ -10,7 +10,7 @@ function ChatBubble({ message, onRegenerate, isRegenerating }) {
   if (role === "user" && isTemplate) {
     return (
       <div className="flex animate-message-in justify-end">
-        <div className="flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary">
+        <div className="flex items-center gap-1.5 rounded-full border-2 border-ink bg-brut-yellow/50 px-4 py-1.5 font-display text-sm font-medium text-ink">
           <Sparkles size={12} />
           {displayLabel}
         </div>
@@ -25,11 +25,11 @@ function ChatBubble({ message, onRegenerate, isRegenerating }) {
           className="
             max-w-[80%]
             rounded-2xl rounded-br-md
-            bg-linear-to-br from-primary to-primary/85
+            border-2 border-ink bg-ink
             px-4 py-3
             text-[15px] leading-6
-            text-primary-foreground
-            shadow-sm
+            text-cream
+            shadow-brutal-sm
           "
         >
           {content}
@@ -41,27 +41,23 @@ function ChatBubble({ message, onRegenerate, isRegenerating }) {
   return (
     <div className="flex animate-message-in justify-start gap-1">
       <div className="mt-1 shrink-0">
-        <Logo size={46} className="text-gray-950 dark:text-white" />
+        <Logo size={46} />
       </div>
 
       <div
         className="
           max-w-[80%]
           rounded-2xl rounded-bl-md
-          border border-primary/15
-          bg-white/70
+          border-2 border-ink
+          bg-cream-surface
           px-4 py-3
           text-[15px] leading-6
-          text-slate-800
-          shadow-sm
-          backdrop-blur-xl
-          dark:border-white/10
-          dark:bg-white/5
-          dark:text-slate-200
+          text-ink
+          shadow-brutal-sm
         "
       >
         {typeof score === "number" && (
-          <div className="mb-2.5 border-b border-black/5 pb-2.5 dark:border-white/10">
+          <div className="mb-2.5 border-b-2 border-ink/15 pb-2.5">
             <ScoreRing score={score} />
           </div>
         )}
@@ -75,11 +71,9 @@ function ChatBubble({ message, onRegenerate, isRegenerating }) {
             disabled={isRegenerating}
             className="
               -ml-2 mt-2.5 flex items-center gap-1.5 rounded-full
-              px-2 py-1 text-xs text-slate-500 transition-all
-              hover:bg-surface-muted hover:text-slate-800
+              px-2 py-1 font-display text-xs font-medium text-ink-muted transition-all
+              hover:bg-cream hover:text-ink
               active:scale-90 disabled:opacity-50
-              dark:text-slate-400 dark:hover:bg-white/5
-              dark:hover:text-primary-foreground
             "
           >
             <RotateCcw size={12} className={isRegenerating ? "animate-spin" : ""} />

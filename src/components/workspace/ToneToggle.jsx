@@ -3,13 +3,13 @@ import { Flame, Heart } from "lucide-react"
 // props: tone ("roast" | "encourage"), setTone
 export default function ToneToggle({ tone, setTone }) {
   return (
-    <div className="flex items-center gap-1 rounded-full border border-border bg-canvas p-0.5">
+    <div className="flex items-center gap-1 rounded-full border-2 border-ink bg-cream-surface p-0.5">
       <button
         onClick={() => setTone("roast")}
-        className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition ${
+        className={`flex items-center gap-1 rounded-full px-2.5 py-1 font-display text-xs font-semibold transition ${
           tone === "roast"
-            ? "bg-primary text-primary-foreground"
-            : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"
+            ? "bg-ink text-cream"
+            : "text-ink-muted hover:text-ink"
         }`}
       >
         <Flame size={12} />
@@ -17,10 +17,10 @@ export default function ToneToggle({ tone, setTone }) {
       </button>
       <button
         onClick={() => setTone("encourage")}
-        className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition ${
+        className={`flex items-center gap-1 rounded-full px-2.5 py-1 font-display text-xs font-semibold transition ${
           tone === "encourage"
-            ? "bg-primary text-primary-foreground"
-            : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"
+            ? "bg-ink text-cream"
+            : "text-ink-muted hover:text-ink"
         }`}
       >
         <Heart size={12} />

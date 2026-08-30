@@ -9,15 +9,15 @@ export default function DiffView({ original, corrected }) {
   if (!hasChanges) return null
 
   return (
-    <div className="mb-2.5 flex animate-message-in flex-col gap-1.5 rounded-xl bg-canvas/60 p-3 text-sm leading-relaxed dark:bg-black/20">
+    <div className="mb-2.5 flex animate-message-in flex-col gap-1.5 rounded-xl border-2 border-ink bg-cream p-3 text-sm leading-relaxed">
       <p className="flex flex-wrap gap-x-1">
         {originalTokens.map((token, i) =>
           token.type === "removed" ? (
-            <span key={i} className="text-red-500 line-through decoration-2 dark:text-red-400">
+            <span key={i} className="text-red-500 line-through decoration-2">
               {token.text}
             </span>
           ) : (
-            <span key={i} className="text-slate-500 dark:text-slate-400">
+            <span key={i} className="text-ink-muted">
               {token.text}
             </span>
           ),
@@ -28,12 +28,12 @@ export default function DiffView({ original, corrected }) {
           token.type === "added" ? (
             <span
               key={i}
-              className="rounded bg-green-500/15 px-1 font-medium text-green-700 dark:bg-green-400/15 dark:text-green-400"
+              className="rounded bg-brut-teal/40 px-1 font-semibold text-ink"
             >
               {token.text}
             </span>
           ) : (
-            <span key={i} className="font-medium text-slate-800 dark:text-white">
+            <span key={i} className="font-medium text-ink">
               {token.text}
             </span>
           ),

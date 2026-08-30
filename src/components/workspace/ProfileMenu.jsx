@@ -4,9 +4,6 @@ import { LogIn, LogOut, User as UserIcon, ChevronRight } from "lucide-react"
 import { useAuth } from "../../hooks/useAuth"
 import { getLevel, toNextLevel } from "../../lib/level"
 
-// props:
-//   totalDescribed — useAchievements().stats.totalDescribed
-//   achievements   — useAchievements().achievements (for the unlocked count)
 export default function ProfileMenu({ totalDescribed, achievements }) {
   const { user, authLoading, signInWithGoogle, signOutUser } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
@@ -30,12 +27,12 @@ export default function ProfileMenu({ totalDescribed, achievements }) {
     <div ref={dropdownRef} className="relative">
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center gap-2 rounded-full border border-border bg-surface/60 py-1 pl-1 pr-3 text-sm font-medium text-slate-700 transition hover:border-slate-400 hover:bg-surface dark:border-white/10 dark:bg-white/5 dark:text-slate-200 dark:hover:bg-white/10"
+        className="flex items-center gap-2 rounded-full border-2 border-ink bg-cream-surface py-1 pl-1 pr-3 font-display text-sm font-medium text-ink shadow-brutal-sm transition-all hover:-translate-y-0.5"
       >
         {user?.photoURL ? (
-          <img src={user.photoURL} alt="" className="h-6 w-6 rounded-full" referrerPolicy="no-referrer" />
+          <img src={user.photoURL} alt="" className="h-6 w-6 rounded-full border-2 border-ink" referrerPolicy="no-referrer" />
         ) : (
-          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/15 text-primary">
+          <span className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-ink bg-brut-yellow text-ink">
             <UserIcon size={13} />
           </span>
         )}
@@ -43,28 +40,28 @@ export default function ProfileMenu({ totalDescribed, achievements }) {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-[calc(100%+8px)] z-100 w-[min(16rem,calc(100vw-2rem))] rounded-2xl border border-border bg-surface/95 p-4 shadow-[0_18px_50px_rgba(0,0,0,0.15)] backdrop-blur-2xl">
+        <div className="absolute right-0 top-[calc(100%+8px)] z-100 w-[min(16rem,calc(100vw-2rem))] rounded-2xl border-2 border-ink bg-cream-surface p-4 shadow-brutal-lg">
           <div className="mb-3 flex items-center gap-3">
             {user?.photoURL ? (
-              <img src={user.photoURL} alt="" className="h-10 w-10 rounded-full" referrerPolicy="no-referrer" />
+              <img src={user.photoURL} alt="" className="h-10 w-10 rounded-full border-2 border-ink" referrerPolicy="no-referrer" />
             ) : (
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/15 text-primary">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-ink bg-brut-yellow text-ink">
                 <UserIcon size={18} />
               </div>
             )}
             <div>
-              <p className="text-sm font-semibold text-slate-900 dark:text-white">
+              <p className="font-display text-sm font-semibold text-ink">
                 {user?.displayName ?? "Guest"}
               </p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-ink-muted">
                 {user?.email ?? "Progress saved on this device"}
               </p>
             </div>
           </div>
 
-          <div className="mb-3 rounded-xl bg-canvas p-3">
-            <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Level {level}</p>
-            <p className="text-[11px] text-slate-400 dark:text-slate-500">
+          <div className="mb-3 rounded-xl border-2 border-ink bg-cream p-3">
+            <p className="font-display text-xs font-medium text-ink-muted">Level {level}</p>
+            <p className="text-[11px] text-ink-muted">
               {remaining} more {remaining === 1 ? "image" : "images"} to Level {level + 1} · {unlockedCount}/{achievements.length} achievements
             </p>
           </div>
@@ -72,7 +69,7 @@ export default function ProfileMenu({ totalDescribed, achievements }) {
           <Link
             to="/profile"
             onClick={() => setIsOpen(false)}
-            className="mb-2 flex items-center justify-between rounded-lg bg-canvas px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-surface-muted dark:text-slate-200"
+            className="mb-2 flex items-center justify-between rounded-lg border-2 border-ink bg-cream px-3 py-2 font-display text-sm font-medium text-ink transition hover:bg-cream-surface"
           >
             View full profile
             <ChevronRight size={14} />
@@ -81,7 +78,7 @@ export default function ProfileMenu({ totalDescribed, achievements }) {
           {user ? (
             <button
               onClick={signOutUser}
-              className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-border py-2 text-sm font-medium text-slate-600 transition hover:bg-surface-muted dark:text-slate-300 dark:hover:bg-white/5"
+              className="flex w-full items-center justify-center gap-1.5 rounded-lg border-2 border-ink py-2 font-display text-sm font-medium text-ink transition hover:bg-cream"
             >
               <LogOut size={14} />
               Sign out
@@ -89,7 +86,7 @@ export default function ProfileMenu({ totalDescribed, achievements }) {
           ) : (
             <button
               onClick={signInWithGoogle}
-              className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary py-2 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+              className="flex w-full items-center justify-center gap-1.5 rounded-lg border-2 border-ink bg-brut-yellow py-2 font-display text-sm font-semibold text-ink shadow-brutal-sm transition-all hover:-translate-y-0.5"
             >
               <LogIn size={14} />
               Sign in to sync
