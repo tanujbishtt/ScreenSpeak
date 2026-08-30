@@ -5,9 +5,6 @@ import Badge from "../ui/Badge";
 import { Sparkle, DottedPlus, Dot } from "../ui/Decorations";
 import WaveDivider from "../ui/WaveDivider";
 
-// TODO: rename these 4 files in src/assets/ to match (or edit the paths
-// below to match whatever you named them) — handbook.png, hand.png,
-// sunflower.png, star.png, all transparent-background cutouts.
 import handbook from "../../assets/handbook.png";
 import hand from "../../assets/hand.png";
 import sunflower from "../../assets/sunflower.png";
@@ -34,7 +31,6 @@ export default function Hero() {
     <section className="relative overflow-hidden bg-cream">
       <div className="mx-auto max-w-7xl px-6 pb-20 pt-20">
         <div className="grid items-center gap-16 lg:grid-cols-2">
-          {/* Left */}
           <div className="relative z-10">
             <Badge className="mb-6">
               <Sparkle size={14} className="text-brut-orange" />
@@ -65,65 +61,47 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Right — vintage cutout collage, floating directly on the
-              cream bg (no card frame/border around it, matches the
-              Canva mockup). Each piece is TWO nested elements: the
-              outer div holds the fixed rotate/position, the inner img
-              holds the animate-float-* keyframe — stacking a static
-              rotate and an animated translateY on the SAME element
-              would have one silently overwrite the other in CSS. */}
           <div className="relative hidden h-150 justify-center lg:block">
-            {/* Star — top right corner, original size, floats fastest */}
             <div className="absolute right-0 top-0 w-45 rotate-6 transition-transform duration-300 hover:scale-110">
               <img
                 src={star}
                 alt=""
-                className="w-full animate-float-slow drop-shadow-[3px_5px_10px_rgba(0,0,0,0.2)]"
+                className="w-full animate-float-slow drop-shadow-[3px_5px_10px_rgba(0,0,0,0.2)] dark:drop-shadow-[0_0_14px_rgba(245,240,230,0.12)]"
               />
             </div>
 
-            {/* Hand + quill — original size, sits behind the book */}
             <div className="absolute right-90 top-2 z-10 w-60 transition-transform duration-300 hover:scale-105">
               <img
                 src={hand}
                 alt=""
-                className="w-full animate-float-slower drop-shadow-[4px_6px_12px_rgba(0,0,0,0.22)]"
+                className="w-full animate-float-slower drop-shadow-[4px_6px_12px_rgba(0,0,0,0.22)] dark:drop-shadow-[0_0_16px_rgba(245,240,230,0.12)]"
               />
             </div>
 
-            {/* Hand + book — the main focal piece. Still sized by HEIGHT
-                (h-88), not width — handbook.png is a tall, narrow cutout
-                (200x449px real size). Sizing it by width is what caused
-                the original overlap (it rendered 600px+ tall). Bumped
-                this up from h-72 so it doesn't look undersized. */}
             <div className="absolute right-30 top-20 z-20 h-125 rotate-3 transition-transform duration-300 hover:scale-105">
               <img
                 src={handbook}
                 alt="Hand holding a book"
-                className="h-full w-auto animate-float-slowest drop-shadow-[5px_8px_16px_rgba(0,0,0,0.25)]"
+                className="h-full w-auto animate-float-slowest drop-shadow-[5px_8px_16px_rgba(0,0,0,0.25)] dark:drop-shadow-[0_0_20px_rgba(245,240,230,0.14)]"
               />
             </div>
 
-            {/* Sunflowers — original size, bottom left, in front of everything */}
             <div className="absolute bottom-0 left-0 z-30 w-65 -rotate-3 transition-transform duration-300 hover:scale-105">
               <img
                 src={sunflower}
                 alt=""
-                className="w-full animate-float-slow drop-shadow-[4px_6px_12px_rgba(0,0,0,0.22)]"
+                className="w-full animate-float-slow drop-shadow-[4px_6px_12px_rgba(0,0,0,0.22)] dark:drop-shadow-[0_0_16px_rgba(245,240,230,0.12)]"
               />
             </div>
 
-            {/* Floating feedback tags */}
-            <Badge className="absolute left-0 top-4 z-40 -rotate-3 bg-brut-yellow transition-transform duration-200 hover:-rotate-6 hover:scale-110">
+            <Badge className="absolute left-0 top-4 z-40 -rotate-3 !bg-brut-yellow !text-ink-fixed transition-transform duration-200 hover:-rotate-6 hover:scale-110">
               ✓ nice vocab honestly
             </Badge>
 
-            <Badge className="absolute bottom-40 right-2 z-40 rotate-2 bg-white transition-transform duration-200 hover:rotate-6 hover:scale-110">
+            <Badge className="absolute bottom-40 right-2 z-40 rotate-2 bg-cream-surface transition-transform duration-200 hover:rotate-6 hover:scale-110">
               try "is walking" instead
             </Badge>
 
-            {/* Scatter decorations — spread across the open negative
-                space between the pieces */}
             <DottedPlus
               size={20}
               className="absolute left-16 top-1/2 text-ink/50"
@@ -145,7 +123,7 @@ export default function Hero() {
         </div>
       </div>
 
-      <WaveDivider fill="fill-brut-teal" />
+      <WaveDivider fill="fill-block-teal" />
     </section>
   );
 }

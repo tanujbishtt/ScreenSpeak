@@ -1,25 +1,46 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* Flat palette */
   --color-cream: #fff9e9;      /* page background */
   --color-cream-surface: #ffffff; /* elevated card/popover/bubble background */
-  --color-cream-panel: #eee; /* large low-luminance surfaces (workspace columns) */
+  --color-cream-panel: #e9e2d0; /* large low-luminance surfaces (workspace columns) */
   --color-ink: #000000;        /* borders, shadows, primary text */
   --color-ink-muted: #56534a;  /* secondary/body text on cream */
+  --color-ink-fixed: #000000;  /* always-black text/border on fixed bright accent blocks (e.g. yellow footer) — must NOT invert in dark mode */
 
   --color-brut-teal: #8cbeb2;
   --color-brut-orange: #fa7930;
   --color-brut-yellow: #ffca41;
+
+  /* "Block" colors — for FULL-BLEED section backgrounds only (HowItWorks
+     section, Footer). Same value as the matching brut-* color in light
+     mode, but overridden to a deep/muted version in dark mode (see .dark
+     below) so a whole-section slab doesn't sit at full light-mode
+     brightness on an otherwise dark page. Small accent chips/icons/buttons
+     should keep using brut-teal / brut-yellow directly, NOT these — those
+     stay vivid in both themes on purpose (that's what makes them pop). */
+  --color-block-teal: var(--color-brut-teal);
+  --color-block-yellow: var(--color-brut-yellow);
+
+  /* Shadow-only ink color. Same as --color-ink in light mode (solid black
+     shadow). In dark mode this gets knocked down to ~65% opacity (see
+     .dark below) so hard shadows read as a soft cast instead of a
+     full-opacity white duplicate-outline next to every bordered element —
+     border-ink itself stays fully opaque either way, only the shadow
+     softens. */
+  --shadow-ink: var(--color-ink);
 
   /* Font */
   --font-display: "Baloo 2", ui-rounded, sans-serif;
 
   /* Hard offset "sticker" shadows — no blur, flat drop. Three sizes cover
      badges/small controls, buttons/cards, and hero-level elements. */
-  --shadow-brutal-sm: 3px 3px 0 0 #000000;
-  --shadow-brutal: 5px 5px 0 0 #000000;
-  --shadow-brutal-lg: 8px 8px 0 0 #000000;
+  --shadow-brutal-sm: 3px 3px 0 0 var(--shadow-ink);
+  --shadow-brutal: 5px 5px 0 0 var(--shadow-ink);
+  --shadow-brutal-lg: 8px 8px 0 0 var(--shadow-ink);
 
   /* Floating cutout images (hero collage) — three speeds/delays so a
      group of them doesn't bob in unison. */
@@ -31,6 +52,7 @@
   --animate-message-in: message-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-achievement-in: achievement-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   --animate-score-in: score-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-theme-pop: theme-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 @keyframes shake {
@@ -82,6 +104,21 @@
   }
 }
 
+@keyframes theme-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) rotate(-90deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.25) rotate(10deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
 /* Gentle vertical bob for the hero's floating cutout images. Deliberately
    only animates translateY (no rotate) so it can be layered on an element
    that already has a static rotate-* utility applied — combining a
@@ -92,6 +129,21 @@
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-14px); }
+}
+
+.dark {
+  --color-cream: #171310;         /* darker canvas — more separation from surface */
+  --color-cream-surface: #362f22; /* lifted a bit for clearer layering vs canvas */
+  --color-cream-panel: #241f16;
+  --color-ink: #f5f0e6;
+  --color-ink-muted: #a39c8a;
+
+  /* solid, same as border-ink — matches light mode's crisp cutout-sticker
+     formula instead of the old softened/hazy 65% version */
+  --shadow-ink: var(--color-ink);
+
+  --color-block-teal: #17322c;
+  --color-block-yellow: #3a2a0c;
 }
 
 html {

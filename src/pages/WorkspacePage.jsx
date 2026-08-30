@@ -20,6 +20,7 @@ import { useAchievements } from "../hooks/useAchievements";
 import AchievementToast from "../components/workspace/AchievementToast";
 import { uploadToCloudinary } from "../lib/uploadToCloudinary";
 import { stripScoreBlockForDisplay } from "../lib/extractScore";
+import ThemeToggle from "../components/layout/ThemeToggle";
 
 export default function WorkspacePage() {
   const { provider, apiKey } = useAiSettings();
@@ -338,6 +339,7 @@ export default function WorkspacePage() {
         </div>
 
         <div className="flex flex-1 items-center justify-end gap-3">
+          <ThemeToggle />
           <ProfileMenu
             totalDescribed={stats.totalDescribed}
             achievements={achievements}

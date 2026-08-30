@@ -122,7 +122,7 @@ export default function SessionDropdown({
             className="
               flex w-full items-center gap-2 rounded-xl px-3 py-2.5
               text-left font-display text-sm font-medium text-ink
-              transition hover:bg-cream
+              transition hover:bg-cream-panel
             "
             role="menuitem"
           >
@@ -143,7 +143,7 @@ export default function SessionDropdown({
                   key={session.id}
                   className="
                     group flex w-full items-center justify-between rounded-xl
-                    px-3 py-2.5 transition hover:bg-cream
+                    px-3 py-2.5 transition hover:bg-cream-panel
                   "
                 >
                   <button

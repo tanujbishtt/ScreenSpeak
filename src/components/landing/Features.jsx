@@ -64,11 +64,6 @@ const features = [
   },
 ];
 
-/**
- * Cream section, grid of brutalist cards. "Coming soon" ones swap to a
- * dashed border instead of a dashed-amber glass treatment — same idea
- * (still in progress), flat-theme version.
- */
 export default function Features() {
   return (
     <section id="features" className="relative bg-cream px-6 pb-40 pt-20">
@@ -104,10 +99,10 @@ export default function Features() {
 
                 <div
                   className={`mb-4 flex h-10 w-10 items-center justify-center rounded-xl border-2 border-ink ${
-                    feature.comingSoon ? "bg-cream" : "bg-brut-yellow"
+                    feature.comingSoon ? "bg-cream-panel" : "bg-brut-yellow"
                   }`}
                 >
-                  <Icon size={20} className="text-ink" />
+                  <Icon size={20} className={feature.comingSoon ? "text-ink" : "text-ink-fixed"} />
                 </div>
 
                 <h3 className="mb-1 font-display font-bold text-ink">
@@ -122,7 +117,7 @@ export default function Features() {
         </div>
       </div>
 
-      <WaveDivider fill="fill-brut-yellow" />
+      <WaveDivider fill="fill-block-yellow" />
     </section>
   );
 }

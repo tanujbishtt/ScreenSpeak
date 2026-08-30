@@ -9,7 +9,7 @@ export default function DiffView({ original, corrected }) {
   if (!hasChanges) return null
 
   return (
-    <div className="mb-2.5 flex animate-message-in flex-col gap-1.5 rounded-xl border-2 border-ink bg-cream p-3 text-sm leading-relaxed">
+    <div className="mb-2.5 flex animate-message-in flex-col gap-1.5 rounded-xl border-2 border-ink bg-cream-panel p-3 text-sm leading-relaxed">
       <p className="flex flex-wrap gap-x-1">
         {originalTokens.map((token, i) =>
           token.type === "removed" ? (

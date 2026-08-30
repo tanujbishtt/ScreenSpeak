@@ -16,6 +16,7 @@ import { getLevel, toNextLevel } from "../lib/level";
 import { ACHIEVEMENT_ICONS } from "../lib/achievementIcons";
 import { fireConfetti } from "../lib/confetti";
 import { playWhoosh } from "../lib/sound";
+import ThemeToggle from "../components/layout/ThemeToggle";
 
 const LAST_CELEBRATED_LEVEL_KEY = "scenespeak_last_celebrated_level";
 
@@ -106,7 +107,7 @@ export default function ProfilePage() {
             Profile
           </span>
         </div>
-        <span className="w-8" aria-hidden="true" />
+        <ThemeToggle />
       </div>
 
       <div className="mx-auto max-w-2xl px-5 py-8">
@@ -165,7 +166,7 @@ export default function ProfilePage() {
               {remaining} more to Level {level + 1}
             </p>
           </div>
-          <div className="h-2.5 w-full overflow-hidden rounded-full border-2 border-ink bg-cream">
+          <div className="h-2.5 w-full overflow-hidden rounded-full border-2 border-ink bg-cream-panel">
             <div
               className="h-full rounded-full bg-brut-orange transition-[width] duration-700 ease-out"
               style={{ width: `${(progressInLevel / 5) * 100}%` }}
@@ -201,7 +202,7 @@ export default function ProfilePage() {
                     className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-ink ${
                       a.unlocked
                         ? "bg-brut-yellow text-ink"
-                        : "bg-cream text-ink-muted"
+                        : "bg-cream-panel text-ink-muted"
                     }`}
                   >
                     {a.unlocked ? <Icon size={18} /> : <Lock size={15} />}

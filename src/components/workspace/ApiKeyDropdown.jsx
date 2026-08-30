@@ -57,14 +57,14 @@ export default function ApiKeyDropdown() {
 
       {isOpen && (
         <div className="absolute left-1/2 top-[calc(100%+8px)] z-100 w-[min(20rem,calc(100vw-2rem))] -translate-x-1/2 rounded-2xl border-2 border-ink bg-cream-surface p-4 shadow-brutal-lg">
-          <div className="flex gap-1 mb-3 rounded-lg border-2 border-ink bg-cream p-1">
+          <div className="flex gap-1 mb-3 rounded-lg border-2 border-ink bg-cream-panel p-1">
             {PROVIDERS.map((p) => (
               <button
                 key={p.id}
                 onClick={() => setActiveTab(p.id)}
                 className={`flex-1 rounded-md py-1.5 font-display text-xs font-medium transition ${
                   activeTab === p.id
-                    ? "bg-ink text-cream"
+                    ? "bg-brut-yellow text-ink-fixed"
                     : "text-ink-muted hover:text-ink"
                 }`}
               >
@@ -89,7 +89,7 @@ export default function ApiKeyDropdown() {
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder={current.keyHint}
-            className="w-full rounded-lg border-2 border-ink bg-cream px-3 py-2 text-sm text-ink outline-none focus:shadow-brutal-sm mb-3"
+            className="w-full rounded-lg border-2 border-ink bg-cream-panel px-3 py-2 text-sm text-ink outline-none focus:shadow-brutal-sm mb-3"
           />
 
           <button

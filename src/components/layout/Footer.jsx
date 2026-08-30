@@ -8,13 +8,26 @@ const navLinks = [
 ];
 
 /**
- * Solid yellow full-bleed footer block, matching the inspo's footer
- * treatment. Social links are small bordered squares instead of plain
- * ghost circles, to stay consistent with the button/badge language.
+ * Full-bleed footer block, matching the inspo's footer treatment. Social
+ * links are small bordered squares instead of plain ghost circles, to stay
+ * consistent with the button/badge language.
+ *
+ * The block itself uses `bg-block-yellow` — vivid yellow in light mode,
+ * deep muted amber in dark mode (see index.css) — NOT `bg-brut-yellow`.
+ * brut-yellow is reserved for small accent chips that stay vivid in both
+ * themes; a whole section is too big to stay at full brightness on an
+ * otherwise dark page.
+ *
+ * Because the block itself now properly inverts, everything sitting
+ * directly on it uses the normal `ink` / `ink-muted` tokens (like any
+ * other themed surface) instead of the always-black `ink-fixed` token —
+ * ink-fixed would stay black even once the block goes dark and disappear
+ * against it. The GitHub/LinkedIn chip buttons are their own independent
+ * cream-surface, so they were already correct and are unchanged.
  */
 export default function Footer() {
   return (
-    <footer className="bg-brut-yellow">
+    <footer className="bg-block-yellow">
       <Sparkle size={18} className="absolute right-10 top-8 text-ink/30" />
       <Dot size={8} className="absolute bottom-8 left-8 text-ink/20" />
       <div className="mx-auto max-w-6xl px-6 py-12">
@@ -25,7 +38,7 @@ export default function Footer() {
               SceneSpeak
             </span>
 
-            <p className="mt-2 text-sm leading-6 text-ink/70">
+            <p className="mt-2 text-sm leading-6 text-ink-muted">
               A little side project to get better at describing the world in
               English, one photo at a time.
             </p>
@@ -43,7 +56,7 @@ export default function Footer() {
                   <Link
                     key={link.path}
                     to={link.path}
-                    className="text-sm text-ink/70 transition hover:text-ink"
+                    className="text-sm text-ink-muted transition hover:text-ink"
                   >
                     {link.name}
                   </Link>
@@ -82,7 +95,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 border-t-2 border-ink/20 pt-6 text-center text-xs text-ink/60">
+        <div className="mt-10 border-t-2 border-ink/20 pt-6 text-center text-xs text-ink-muted">
           built with way too much coffee, by tanuj 🐸
         </div>
       </div>

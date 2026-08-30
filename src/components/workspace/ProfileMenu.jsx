@@ -59,7 +59,7 @@ export default function ProfileMenu({ totalDescribed, achievements }) {
             </div>
           </div>
 
-          <div className="mb-3 rounded-xl border-2 border-ink bg-cream p-3">
+          <div className="mb-3 rounded-xl border-2 border-ink bg-cream-panel p-3">
             <p className="font-display text-xs font-medium text-ink-muted">Level {level}</p>
             <p className="text-[11px] text-ink-muted">
               {remaining} more {remaining === 1 ? "image" : "images"} to Level {level + 1} · {unlockedCount}/{achievements.length} achievements
@@ -69,7 +69,7 @@ export default function ProfileMenu({ totalDescribed, achievements }) {
           <Link
             to="/profile"
             onClick={() => setIsOpen(false)}
-            className="mb-2 flex items-center justify-between rounded-lg border-2 border-ink bg-cream px-3 py-2 font-display text-sm font-medium text-ink transition hover:bg-cream-surface"
+            className="mb-2 flex items-center justify-between rounded-lg border-2 border-ink bg-cream-panel px-3 py-2 font-display text-sm font-medium text-ink transition hover:bg-cream-surface"
           >
             View full profile
             <ChevronRight size={14} />
@@ -78,7 +78,7 @@ export default function ProfileMenu({ totalDescribed, achievements }) {
           {user ? (
             <button
               onClick={signOutUser}
-              className="flex w-full items-center justify-center gap-1.5 rounded-lg border-2 border-ink py-2 font-display text-sm font-medium text-ink transition hover:bg-cream"
+              className="flex w-full items-center justify-center gap-1.5 rounded-lg border-2 border-ink py-2 font-display text-sm font-medium text-ink transition hover:bg-cream-panel"
             >
               <LogOut size={14} />
               Sign out

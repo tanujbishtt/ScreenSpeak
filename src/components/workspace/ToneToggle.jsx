@@ -8,7 +8,7 @@ export default function ToneToggle({ tone, setTone }) {
         onClick={() => setTone("roast")}
         className={`flex items-center gap-1 rounded-full px-2.5 py-1 font-display text-xs font-semibold transition ${
           tone === "roast"
-            ? "bg-ink text-cream"
+            ? "bg-brut-yellow text-ink-fixed"
             : "text-ink-muted hover:text-ink"
         }`}
       >
@@ -19,7 +19,7 @@ export default function ToneToggle({ tone, setTone }) {
         onClick={() => setTone("encourage")}
         className={`flex items-center gap-1 rounded-full px-2.5 py-1 font-display text-xs font-semibold transition ${
           tone === "encourage"
-            ? "bg-ink text-cream"
+            ? "bg-brut-yellow text-ink-fixed"
             : "text-ink-muted hover:text-ink"
         }`}
       >

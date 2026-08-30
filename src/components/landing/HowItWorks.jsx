@@ -32,20 +32,12 @@ const steps = [
   },
 ];
 
-/**
- * Vertical alternating timeline — icon block on one side, text on the
- * other, connected by a center line with a dot per step. The first step
- * gets a tinted highlight panel (matches the reference: step 01 sits in a
- * shaded rounded block, the rest are plain). Alternating layout only
- * kicks in at `lg`; below that it's a simple stacked list, since the
- * left-right dance doesn't have room to work on a phone.
- */
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="relative overflow-hidden bg-brut-teal px-6 pb-40 pt-20">
+    <section id="how-it-works" className="relative overflow-hidden bg-block-teal px-6 pb-40 pt-20">
       <DottedPlus size={22} className="absolute left-10 top-10 text-ink/40" />
-      <Sparkle size={22} className="absolute right-16 top-16 text-cream" />
-      <Dot size={8} className="absolute bottom-14 left-1/3 text-cream/60" />
+      <Sparkle size={22} className="absolute right-16 top-16 text-ink/70" />
+      <Dot size={8} className="absolute bottom-14 left-1/3 text-ink/40" />
 
       <div className="mx-auto max-w-4xl px-6">
         <div className="rounded-[28px] border-2 border-ink bg-cream-surface p-8 shadow-brutal-lg sm:p-12">
@@ -61,7 +53,6 @@ export default function HowItWorks() {
           </div>
 
           <div className="relative">
-            {/* Center connecting line — desktop only */}
             <div className="absolute left-1/2 top-0 hidden h-full w-0.5 -translate-x-1/2 bg-ink/15 lg:block" />
 
             {steps.map((step, i) => {
@@ -76,10 +67,8 @@ export default function HowItWorks() {
                     isEven ? "" : "lg:flex-row-reverse"
                   } ${isLast ? "" : "mb-14"}`}
                 >
-                  {/* Center dot — desktop only */}
                   <div className="absolute left-1/2 top-1/2 hidden h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-ink bg-brut-orange lg:block" />
 
-                  {/* Icon side */}
                   <div
                     className={`flex w-full justify-center lg:w-1/2 ${
                       isEven
@@ -89,17 +78,16 @@ export default function HowItWorks() {
                   >
                     <div
                       className={`relative flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-ink shadow-brutal ${
-                        step.active ? "bg-brut-yellow" : "bg-cream"
+                        step.active ? "bg-brut-yellow" : "bg-cream-panel"
                       }`}
                     >
-                      <Icon size={26} className="text-ink" />
+                      <Icon size={26} className={step.active ? "text-ink-fixed" : "text-ink"} />
                       <span className="absolute -bottom-2.5 -right-2.5 flex h-7 w-7 items-center justify-center rounded-full border-2 border-ink bg-cream-surface font-display text-xs font-bold text-ink">
                         {String(i + 1).padStart(2, "0")}
                       </span>
                     </div>
                   </div>
 
-                  {/* Text side */}
                   <div
                     className={`w-full text-center lg:w-1/2 ${
                       isEven

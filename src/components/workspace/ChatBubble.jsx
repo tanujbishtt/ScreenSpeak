@@ -72,7 +72,7 @@ function ChatBubble({ message, onRegenerate, isRegenerating }) {
             className="
               -ml-2 mt-2.5 flex items-center gap-1.5 rounded-full
               px-2 py-1 font-display text-xs font-medium text-ink-muted transition-all
-              hover:bg-cream hover:text-ink
+              hover:bg-cream-panel hover:text-ink
               active:scale-90 disabled:opacity-50
             "
           >

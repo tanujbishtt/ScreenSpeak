@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 
 import Button from "../ui/Button";
+import ThemeToggle from "./ThemeToggle";
 import { GithubIcon } from "../icons/BrandIcons";
 
 const navLinks = [{ name: "Home", path: "/" }];
@@ -56,6 +57,8 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
+          <ThemeToggle />
+
           <a
             href="https://github.com/tanujbishtt/ScreenSpeak"
             target="_blank"
