@@ -80,10 +80,10 @@ export default function SessionDropdown({
           disabled={!canRename}
           title={canRename ? "Click to rename & save" : "Start chatting to save a session"}
           className="
-            max-w-[7rem] truncate rounded-lg px-2 py-1.5 text-left
+            max-w-28 truncate rounded-lg px-2 py-1.5 text-left
             font-display text-sm font-medium text-ink transition hover:bg-cream
             disabled:cursor-not-allowed disabled:opacity-50
-            sm:max-w-[10rem]
+            sm:max-w-40
           "
         >
           {sessionName}
