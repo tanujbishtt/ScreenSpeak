@@ -39,9 +39,9 @@ function ChatBubble({ message, onRegenerate, isRegenerating }) {
   }
 
   return (
-    <div className="flex animate-message-in justify-start gap-2.5">
+    <div className="flex animate-message-in justify-start gap-1">
       <div className="mt-1 shrink-0">
-        <Logo size={36} />
+        <Logo size={46} className="text-gray-950 dark:text-white" />
       </div>
 
       <div

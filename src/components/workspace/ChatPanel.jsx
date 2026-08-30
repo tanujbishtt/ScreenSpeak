@@ -44,8 +44,8 @@ export default function ChatPanel({
               : "flex min-h-0 flex-1 flex-col items-center justify-center px-6 text-center"
           }
         >
-          <Logo size={28} />
-          <p className="mt-4 max-w-xs text-sm text-slate-500 dark:text-slate-400">
+          <Logo size={70} />
+          <p className=" max-w-xs text-sm text-slate-500 dark:text-slate-400">
             Describe what's happening in the photo to start practicing — I'll give you feedback
             right here.
           </p>

@@ -332,13 +332,13 @@ export default function WorkspacePage() {
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden bg-canvas">
       <div className="relative z-50 flex h-14 shrink-0 items-center border-b border-border bg-canvas/85 px-4 backdrop-blur-xl">
-        <div className="flex flex-1 items-center gap-3">
+        <div className="flex flex-1 items-center">
           <Link
             to="/"
             className="flex items-center rounded-lg transition-opacity hover:opacity-80"
             aria-label="Go to home"
           >
-            <Logo size={22} />
+            <Logo size={46} />
           </Link>
           <SessionDropdown
             sessionName={sessionName}

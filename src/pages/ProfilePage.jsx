@@ -100,8 +100,8 @@ export default function ProfilePage() {
           <ArrowLeft size={16} />
           Workspace
         </Link>
-        <div className="flex flex-1 items-center justify-center gap-2">
-          <Logo size={20} />
+        <div className="flex flex-1 items-center justify-center">
+          <Logo size={46} />
           <span className="font-display text-sm font-semibold text-ink">
             Profile
           </span>
