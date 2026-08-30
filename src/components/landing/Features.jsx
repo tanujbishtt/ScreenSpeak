@@ -1,4 +1,17 @@
-import { Image, Sparkles, KeyRound, Smartphone, Flame, Trophy, UserCircle, Mic } from "lucide-react"
+import {
+  Image,
+  Sparkles,
+  KeyRound,
+  UserCircle,
+  Trophy,
+  ImagePlus,
+  SlidersHorizontal,
+  Mic,
+} from "lucide-react";
+import Card from "../ui/Card";
+import Badge from "../ui/Badge";
+import WaveDivider from "../ui/WaveDivider";
+import { Sparkle, DottedPlus, Dot } from "../ui/Decorations";
 
 const features = [
   {
@@ -20,28 +33,28 @@ const features = [
     comingSoon: false,
   },
   {
-    icon: Smartphone,
-    title: "Works everywhere",
-    desc: "Dark mode, light mode, phone, laptop — all covered.",
+    icon: UserCircle,
+    title: "Profile & history",
+    desc: "Every attempt saved, so you can look back and see the progress.",
     comingSoon: false,
   },
   {
-    icon: Flame,
-    title: "Streaks",
-    desc: "Keep a daily practice streak going.",
-    comingSoon: true,
-  },
-  {
     icon: Trophy,
-    title: "XP & levels",
-    desc: "Level up as you practice more.",
-    comingSoon: true,
+    title: "Achievements",
+    desc: "Little unlocks for streaks, perfect scores, and just showing up.",
+    comingSoon: false,
   },
   {
-    icon: UserCircle,
-    title: "Profile & history",
-    desc: "See your past attempts and track progress over time.",
-    comingSoon: true,
+    icon: ImagePlus,
+    title: "Bring your own photo",
+    desc: "Upload a scene of your own instead of picking from the bank.",
+    comingSoon: false,
+  },
+  {
+    icon: SlidersHorizontal,
+    title: "Toggle the tone",
+    desc: 'Switch feedback between "roast me" and "encourage me" modes.',
+    comingSoon: false,
   },
   {
     icon: Mic,
@@ -49,58 +62,67 @@ const features = [
     desc: "Speak your description instead of typing it.",
     comingSoon: true,
   },
-]
+];
 
+/**
+ * Cream section, grid of brutalist cards. "Coming soon" ones swap to a
+ * dashed border instead of a dashed-amber glass treatment — same idea
+ * (still in progress), flat-theme version.
+ */
 export default function Features() {
   return (
-    <section id="features" className="max-w-6xl mx-auto px-6 py-16">
-      <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
-          What you get
-        </h2>
-        <p className="mt-2 text-slate-500 dark:text-slate-400">
-          some of this works right now, some of it's coming soon
-        </p>
-      </div>
+    <section id="features" className="relative bg-cream px-6 pb-40 pt-20">
+      <DottedPlus size={20} className="absolute left-10 top-12 text-ink/40" />
+      <Sparkle
+        size={18}
+        className="absolute right-14 top-20 text-brut-orange/60"
+      />
+      <Dot size={10} className="absolute bottom-16 left-1/4 text-brut-teal" />
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="mb-14 text-center">
+          <h2 className="font-display text-3xl font-extrabold text-ink lg:text-4xl">
+            What you get
+          </h2>
+          <p className="mt-2 font-display text-ink-muted">
+            most of this works right now, a few things are still cooking
+          </p>
+        </div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {features.map((feature) => {
-          const Icon = feature.icon
-          return (
-            <div
-              key={feature.title}
-              className={`relative rounded-2xl p-5 backdrop-blur-md ${
-                feature.comingSoon
-                  ? "border border-dashed border-amber-300/60 dark:border-amber-400/30 bg-amber-50/40 dark:bg-amber-400/5"
-                  : "border border-slate-200 dark:border-white/10 bg-white/60 dark:bg-white/5"
-              }`}
-            >
-              {feature.comingSoon && (
-                <span className="absolute top-4 right-4 text-[10px] font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-400/10 px-2 py-0.5 rounded-full">
-                  Soon
-                </span>
-              )}
-
-              <div
-                className={`h-10 w-10 rounded-xl flex items-center justify-center mb-4 ${
-                  feature.comingSoon
-                    ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
-                    : "bg-primary/10 text-primary "
-                }`}
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {features.map((feature) => {
+            const Icon = feature.icon;
+            return (
+              <Card
+                key={feature.title}
+                className={`relative p-5 ${feature.comingSoon ? "border-dashed" : ""}`}
               >
-                <Icon size={20} />
-              </div>
+                {feature.comingSoon && (
+                  <Badge className="absolute -right-2 -top-3 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide shadow-brutal-sm">
+                    Soon
+                  </Badge>
+                )}
 
-              <h3 className="font-semibold text-slate-900 dark:text-white mb-1">
-                {feature.title}
-              </h3>
-              <p className="text-sm text-slate-500 dark:text-slate-400 leading-6">
-                {feature.desc}
-              </p>
-            </div>
-          )
-        })}
+                <div
+                  className={`mb-4 flex h-10 w-10 items-center justify-center rounded-xl border-2 border-ink ${
+                    feature.comingSoon ? "bg-cream" : "bg-brut-yellow"
+                  }`}
+                >
+                  <Icon size={20} className="text-ink" />
+                </div>
+
+                <h3 className="mb-1 font-display font-bold text-ink">
+                  {feature.title}
+                </h3>
+                <p className="text-sm leading-6 text-ink-muted">
+                  {feature.desc}
+                </p>
+              </Card>
+            );
+          })}
+        </div>
       </div>
+
+      <WaveDivider fill="fill-brut-yellow" />
     </section>
-  )
+  );
 }

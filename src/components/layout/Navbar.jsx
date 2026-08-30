@@ -1,14 +1,11 @@
 import { useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 
-import ThemeToggle from "./ThemeToggle";
-import {GithubIcon} from '../icons/BrandIcons'
+import Button from "../ui/Button";
+import { GithubIcon } from "../icons/BrandIcons";
 
-const navLinks = [
-  { name: "Home", path: "/" },
-  { name: "Practice", path: "/workspace" },
-];
+const navLinks = [{ name: "Home", path: "/" }];
 
 const anchorLinks = [
   { name: "How it Works", href: "#how-it-works" },
@@ -17,162 +14,111 @@ const anchorLinks = [
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-
-  const { pathname } = useLocation();
-  const isHome = pathname === "/";
+  function handleHomeClick() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
   return (
-    <header className="fixed left-1/2 top-5 z-50 w-full max-w-7xl -translate-x-1/2 px-4">
-      <nav
-        className="
-          relative flex h-12 items-center justify-between
-          rounded-full border border-white/20
-          bg-white/45 px-6
-          shadow-[0_4px_24px_rgba(0,0,0,0.08)]
-          backdrop-blur-3xl
-          dark:border-white/10
-          dark:bg-white/5
-          dark:shadow-[0_8px_30px_rgba(0,0,0,0.35)]
-        "
-      >
-        {/* Subtle glass highlight */}
-        <div className="pointer-events-none absolute inset-0 rounded-full border border-white/10" />
-
-        <Link
-          to="/"
-          className="
-            z-10 text-base font-semibold tracking-tight
-            text-slate-900 dark:text-white
-          "
-        >
-          SceneSpeak
+    <header className="relative border-b-2 border-ink bg-cream">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+        <Link to="/" className="font-display text-xl font-bold text-ink">
+          Scene<span className="text-brut-orange">Speak</span>
         </Link>
 
-        <div className="z-10 flex items-center gap-4">
-          {/* Desktop navigation */}
-          <div className="hidden items-center gap-2 md:flex">
-            {isHome && (
-              <>
-                {navLinks.map((link) => (
-                  <NavLink
-                    key={link.path}
-                    to={link.path}
-                    className={({ isActive }) =>
-                      `rounded-full px-3 py-1.5 text-[14px] font-medium transition-all duration-300 ${
-                        isActive
-                          ? "bg-white/20 text-slate-900 dark:bg-white/10 dark:text-white"
-                          : "text-slate-600 hover:bg-white/20 hover:text-slate-900 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-white"
-                      }`
-                    }
-                  >
-                    {link.name}
-                  </NavLink>
-                ))}
+        {/* Desktop nav */}
+        <div className="hidden items-center gap-1 md:flex">
+          {navLinks.map((link) => (
+            <NavLink
+              key={link.path}
+              to={link.path}
+              onClick={link.path === "/" ? handleHomeClick : undefined}
+              className={({ isActive }) =>
+                `rounded-lg px-3 py-2 font-display text-[15px] font-medium transition-colors ${
+                  isActive
+                    ? "text-ink underline decoration-2 underline-offset-4"
+                    : "text-ink-muted hover:text-ink"
+                }`
+              }
+            >
+              {link.name}
+            </NavLink>
+          ))}
 
-                {anchorLinks.map((link) => (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    className="
-                      rounded-full px-3 py-1.5
-                      text-[14px] font-medium
-                      text-slate-600
-                      transition-all duration-300
-                      hover:bg-white/20 hover:text-slate-900
-                      dark:text-gray-300
-                      dark:hover:bg-white/10 dark:hover:text-white
-                    "
-                  >
-                    {link.name}
-                  </a>
-                ))}
-              </>
-            )}
-
+          {anchorLinks.map((link) => (
             <a
-              href="https://github.com/tanujbishtt/ScreenSpeak"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="
-                flex items-center gap-1.5 rounded-full
-                border border-slate-200 px-3 py-1.5
-                text-[14px] font-medium text-slate-600
-                transition-all duration-300
-                hover:bg-white/20 hover:text-slate-900
-                dark:border-white/10 dark:text-gray-300
-                dark:hover:bg-white/10 dark:hover:text-white
-              "
+              key={link.href}
+              href={link.href}
+              className="rounded-lg px-3 py-2 font-display text-[15px] font-medium text-ink-muted transition-colors hover:text-ink"
             >
-              <GithubIcon size={15} />
-              Star
+              {link.name}
             </a>
-          </div>
-
-          {/* Theme toggle */}
-          <ThemeToggle
-            size={17}
-            className="text-slate-600 hover:bg-white/20 hover:text-slate-900 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-white"
-          />
-
-          {/* Mobile menu */}
-          {isHome && (
-            <button
-              onClick={() => setIsOpen((prev) => !prev)}
-              aria-label="Toggle menu"
-              aria-expanded={isOpen}
-              className="
-                flex h-8 w-8 items-center justify-center rounded-full
-                text-slate-900
-                transition-all duration-300
-                hover:bg-white/20
-                dark:text-white dark:hover:bg-white/10
-                md:hidden
-              "
-            >
-              {isOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          )}
+          ))}
         </div>
-      </nav>
+
+        <div className="flex items-center gap-3">
+          <a
+            href="https://github.com/tanujbishtt/ScreenSpeak"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden items-center gap-1.5 rounded-full border-2 border-ink bg-cream-surface px-3 py-1.5 font-display text-sm font-medium text-ink shadow-brutal-sm transition-all hover:-translate-y-0.5 sm:flex"
+          >
+            <GithubIcon size={15} />
+            Star
+          </a>
+
+          <Button
+            to="/workspace"
+            variant="yellow"
+            size="md"
+            className="hidden md:inline-flex"
+          >
+            Practice
+          </Button>
+
+          {/* Mobile menu toggle */}
+          <button
+            onClick={() => setIsOpen((prev) => !prev)}
+            aria-label="Toggle menu"
+            aria-expanded={isOpen}
+            className="flex h-10 w-10 items-center justify-center rounded-xl border-2 border-ink bg-cream-surface text-ink shadow-brutal-sm md:hidden"
+          >
+            {isOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
+      </div>
 
       {/* Mobile dropdown */}
       <div
         className={`
-          overflow-hidden transition-all duration-300 md:hidden
-          ${
-            isOpen
-              ? "pointer-events-auto mt-3 max-h-96 opacity-100"
-              : "pointer-events-none max-h-0 opacity-0"
-          }
+          overflow-hidden border-t-2 border-ink bg-cream-surface
+          transition-all duration-300 md:hidden
+          ${isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}
         `}
       >
-        <div
-          className="
-            rounded-3xl border border-white/20
-            bg-white/60 p-4
-            shadow-lg backdrop-blur-3xl
-            dark:border-white/10
-            dark:bg-slate-900/60
-          "
-        >
-          <div className="flex flex-col gap-2">
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.path}
-                to={link.path}
-                onClick={() => setIsOpen(false)}
-                className={({ isActive }) =>
-                  `rounded-xl px-4 py-2 text-sm font-medium transition-all ${
-                    isActive
-                      ? "bg-white/20 text-slate-900 dark:bg-white/10 dark:text-white"
-                      : "text-slate-600 hover:bg-white/20 hover:text-slate-900 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-white"
-                  }`
-                }
-              >
-                {link.name}
-              </NavLink>
-            ))}
-          </div>
+        <div className="flex flex-col gap-1 px-6 py-4">
+          {navLinks.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              onClick={() => {
+                setIsOpen(false);
+                if (link.path === "/") handleHomeClick();
+              }}
+              className="rounded-lg px-3 py-2.5 font-display text-[15px] font-medium text-ink"
+            >
+              {link.name}
+            </Link>
+          ))}
+          {anchorLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={() => setIsOpen(false)}
+              className="rounded-lg px-3 py-2.5 font-display text-[15px] font-medium text-ink"
+            >
+              {link.name}
+            </a>
+          ))}
         </div>
       </div>
     </header>

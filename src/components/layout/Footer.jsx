@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-
+import { Sparkle, Dot } from "../ui/Decorations";
 import { GithubIcon, LinkedinIcon } from "../icons/BrandIcons";
 
 const navLinks = [
@@ -7,18 +7,25 @@ const navLinks = [
   { name: "Practice", path: "/workspace" },
 ];
 
+/**
+ * Solid yellow full-bleed footer block, matching the inspo's footer
+ * treatment. Social links are small bordered squares instead of plain
+ * ghost circles, to stay consistent with the button/badge language.
+ */
 export default function Footer() {
   return (
-    <footer className="mt-20 border-t border-slate-200 dark:border-white/10">
-      <div className="mx-auto max-w-6xl px-6 py-10">
-        <div className="flex flex-col justify-between gap-8 md:flex-row">
+    <footer className="bg-brut-yellow">
+      <Sparkle size={18} className="absolute right-10 top-8 text-ink/30" />
+      <Dot size={8} className="absolute bottom-8 left-8 text-ink/20" />
+      <div className="mx-auto max-w-6xl px-6 py-12">
+        <div className="flex flex-col justify-between gap-10 md:flex-row">
           {/* Brand */}
           <div className="max-w-xs">
-            <span className="text-lg font-bold text-slate-900 dark:text-white">
+            <span className="font-display text-lg font-bold text-ink">
               SceneSpeak
             </span>
 
-            <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
+            <p className="mt-2 text-sm leading-6 text-ink/70">
               A little side project to get better at describing the world in
               English, one photo at a time.
             </p>
@@ -27,7 +34,7 @@ export default function Footer() {
           {/* Navigation */}
           <div className="flex gap-16">
             <div>
-              <h4 className="mb-3 text-sm font-semibold text-slate-900 dark:text-white">
+              <h4 className="mb-3 font-display text-sm font-bold text-ink">
                 Navigate
               </h4>
 
@@ -36,11 +43,7 @@ export default function Footer() {
                   <Link
                     key={link.path}
                     to={link.path}
-                    className="
-                      text-sm text-slate-500
-                      transition hover:text-slate-900
-                      dark:text-slate-400 dark:hover:text-white
-                    "
+                    className="text-sm text-ink/70 transition hover:text-ink"
                   >
                     {link.name}
                   </Link>
@@ -50,7 +53,7 @@ export default function Footer() {
 
             {/* Social links */}
             <div>
-              <h4 className="mb-3 text-sm font-semibold text-slate-900 dark:text-white">
+              <h4 className="mb-3 font-display text-sm font-bold text-ink">
                 Find me
               </h4>
 
@@ -60,15 +63,9 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="GitHub"
-                  className="
-                    flex h-9 w-9 items-center justify-center rounded-full
-                    border border-slate-200 text-slate-600
-                    transition hover:bg-slate-100 hover:text-slate-900
-                    dark:border-white/10 dark:text-slate-300
-                    dark:hover:bg-white/10 dark:hover:text-white
-                  "
+                  className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink bg-cream-surface text-ink shadow-brutal-sm transition-all hover:-translate-y-0.5"
                 >
-                  <GithubIcon size={17} />
+                  <GithubIcon size={16} />
                 </a>
 
                 <a
@@ -76,27 +73,16 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="LinkedIn"
-                  className="
-                    flex h-9 w-9 items-center justify-center rounded-full
-                    border border-slate-200 text-slate-600
-                    transition hover:bg-slate-100 hover:text-slate-900
-                    dark:border-white/10 dark:text-slate-300
-                    dark:hover:bg-white/10 dark:hover:text-white
-                  "
+                  className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink bg-cream-surface text-ink shadow-brutal-sm transition-all hover:-translate-y-0.5"
                 >
-                  <LinkedinIcon size={17} />
+                  <LinkedinIcon size={16} />
                 </a>
               </div>
             </div>
           </div>
         </div>
 
-        <div
-          className="
-            mt-10 border-t border-slate-200 pt-6 text-center text-xs
-            text-slate-400 dark:border-white/10 dark:text-slate-500
-          "
-        >
+        <div className="mt-10 border-t-2 border-ink/20 pt-6 text-center text-xs text-ink/60">
           built with way too much coffee, by tanuj 🐸
         </div>
       </div>
