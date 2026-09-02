@@ -1,8 +1,12 @@
+const cache = new Map()
+
 export async function imageUrlToBase64(url) {
+  if (cache.has(url)) return cache.get(url)
+
   const response = await fetch(url)
   const blob = await response.blob()
 
-  return new Promise((resolve, reject) => {
+  const result = await new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.onloadend = () => {
       const base64 = reader.result.split(",")[1]
@@ -11,4 +15,7 @@ export async function imageUrlToBase64(url) {
     reader.onerror = reject
     reader.readAsDataURL(blob)
   })
+
+  cache.set(url, result)
+  return result
 }

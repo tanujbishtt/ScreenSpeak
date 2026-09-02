@@ -132,15 +132,15 @@
 }
 
 .dark {
-  --color-cream: #171310;         /* darker canvas — more separation from surface */
-  --color-cream-surface: #362f22; /* lifted a bit for clearer layering vs canvas */
-  --color-cream-panel: #241f16;
-  --color-ink: #f5f0e6;
-  --color-ink-muted: #a39c8a;
+  --color-cream: #14161c;         /* cool charcoal-navy canvas, not brown */
+  --color-cream-surface: #1f222b; /* lifted slate for cards/popovers/bubbles */
+  --color-cream-panel: #1a1c24;   /* workspace panels, between canvas and surface */
+  --color-ink: #ece8de;           /* soft warm-white text — not pure white, less glare */
+  --color-ink-muted: #8b8f9c;     /* cool grey secondary text */
 
-  /* solid, same as border-ink — matches light mode's crisp cutout-sticker
-     formula instead of the old softened/hazy 65% version */
-  --shadow-ink: var(--color-ink);
+  /* softened shadow — reads as a soft cast instead of a solid white
+     duplicate-outline next to every bordered element */
+  --shadow-ink: color-mix(in srgb, #ece8de 55%, transparent);
 
   --color-block-teal: #17322c;
   --color-block-yellow: #3a2a0c;
