@@ -1,11 +1,6 @@
 import { collection, doc, getDoc, getCountFromServer } from "firebase/firestore"
 import { db } from "./firebase"
 
-// Instead of downloading the whole "images" collection, we ask Firestore
-// for a cheap document count once (cached), then fetch a SINGLE random doc
-// by id per image shown. Assumes doc ids are a contiguous 1..count sequence
-// (true as long as images are only ever appended, never deleted from the
-// middle of the range).
 let cachedCountPromise = null
 
 async function fetchCount() {

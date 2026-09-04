@@ -1,13 +1,44 @@
 import confetti from "canvas-confetti"
 
-// A quick celebratory burst for high scores (80+) — kept as its own tiny
-// wrapper so the confetti config lives in exactly one place.
 export function fireConfetti() {
+  const colors = [
+    "#7dd3bf",
+    "#ffcb77",
+    "#fe6d73",
+    "#2584a7",
+    "#ffffff",
+  ]
+
+  // Main burst
   confetti({
-    particleCount: 90,
-    spread: 70,
-    startVelocity: 35,
-    origin: { y: 0.7 },
-    colors: ["#7dd3bf", "#ffcb77", "#fe6d73", "#2584a7"],
+    particleCount: 75,
+    spread: 75,
+    startVelocity: 42,
+    gravity: 0.9,
+    ticks: 180,
+    scalar: 0.9,
+    drift: 0.2,
+    origin: {
+      x: 0.5,
+      y: 0.65,
+    },
+    colors,
   })
+
+  // Smaller "sparkle" burst slightly later
+  setTimeout(() => {
+    confetti({
+      particleCount: 35,
+      spread: 100,
+      startVelocity: 28,
+      gravity: 1.15,
+      ticks: 140,
+      scalar: 0.65,
+      origin: {
+        x: 0.5,
+        y: 0.62,
+      },
+      colors,
+    })
+  }, 90)
 }
