@@ -5,9 +5,9 @@ import { readSSE } from "../sse"
 
 const MODEL = "gpt-5.6"
 
+// apiKey is now OPTIONAL — see the note in providers/gemini.js. Same
+// fallback-to-default-key behavior, handled by functions/api/openai.js.
 export async function askOpenAI({ apiKey, imageUrl, history, requestScore, tone, onDelta }) {
-  if (!apiKey) throw new Error("No OpenAI API key set")
-
   const { base64, mimeType } = await imageUrlToBase64(imageUrl)
 
   const systemText = getSystemInstruction(tone) + (requestScore ? SCORE_INSTRUCTION : "")
@@ -28,9 +28,12 @@ export async function askOpenAI({ apiKey, imageUrl, history, requestScore, tone,
     }),
   ]
 
-  const response = await fetch("/api/openai/v1/chat/completions", {
+  const headers = { "Content-Type": "application/json" }
+  if (apiKey) headers["x-user-key"] = apiKey
+
+  const response = await fetch("/api/openai", {
     method: "POST",
-    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
+    headers,
     body: JSON.stringify({ model: MODEL, messages, stream: true }),
   })
 

@@ -10,8 +10,10 @@ node_modules/
 
 # Production
 dist/
+.wrangler
 
 # Environment variables
+.dev.vars
 .env
 .env.*
 !.env.example

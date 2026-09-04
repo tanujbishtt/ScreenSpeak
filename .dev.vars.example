@@ -1,0 +1,14 @@
+# Copy this file to ".dev.vars" (already gitignored) and fill in real keys.
+# Used only by `wrangler pages dev` for local testing of functions/api/*.
+# In production, set these in the Cloudflare Pages dashboard instead —
+# Settings → Environment variables → add as "Secret".
+#
+# Comma-separate multiple keys to rotate through them automatically
+# (e.g. when one hits its quota). No spaces needed around the commas.
+#
+# IMPORTANT: no "VITE_" prefix. VITE_-prefixed vars get baked into the
+# public browser bundle by Vite — these are read only by the server-side
+# functions, so that prefix would be both wrong and unsafe here.
+
+GEMINI_API_KEYS=api_key_1,api_key_2
+OPENAI_API_KEYS=api_key_1,api_key_2

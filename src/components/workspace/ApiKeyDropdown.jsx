@@ -3,9 +3,9 @@ import { KeyRound, ExternalLink, Check } from "lucide-react"
 import { useAiSettings } from "../../hooks/useAiSettings"
 
 const PROVIDERS = [
-  { id: "gemini", label: "Gemini", keyHint: "AIzaSy...", keyUrl: "https://aistudio.google.com/apikey" },
-  { id: "openai", label: "ChatGPT", keyHint: "sk-...", keyUrl: "https://platform.openai.com/api-keys" },
-  { id: "claude", label: "Claude", keyHint: "sk-ant-...", keyUrl: "https://console.anthropic.com/settings/keys" },
+  { id: "gemini", label: "Gemini", keyHint: "AIzaSy...", keyUrl: "https://aistudio.google.com/apikey", requiresKey: false },
+  { id: "openai", label: "ChatGPT", keyHint: "sk-...", keyUrl: "https://platform.openai.com/api-keys", requiresKey: false },
+  { id: "claude", label: "Claude", keyHint: "sk-ant-...", keyUrl: "https://console.anthropic.com/settings/keys", requiresKey: true },
 ]
 
 export default function ApiKeyDropdown() {
@@ -41,8 +41,8 @@ export default function ApiKeyDropdown() {
         onClick={() => setIsOpen((prev) => !prev)}
         className={`flex items-center gap-2 rounded-full border-2 border-ink px-3 py-1.5 font-display text-sm font-medium shadow-brutal-sm transition-all hover:-translate-y-0.5 ${
           hasKey
-            ? "bg-cream-surface text-ink"
-            : "bg-brut-yellow text-ink"
+            ? "bg-brut-yellow text-ink"
+            : "bg-cream-surface text-ink"
         }`}
       >
         {hasKey ? (
@@ -51,7 +51,7 @@ export default function ApiKeyDropdown() {
             {PROVIDERS.find((p) => p.id === provider)?.label}
           </>
         ) : (
-          "Add API Key"
+          "Using free tier"
         )}
       </button>
 
@@ -81,7 +81,11 @@ export default function ApiKeyDropdown() {
             </h4>
           </div>
           <p className="text-xs text-ink-muted mb-3">
-            Stored only in your browser. Never sent anywhere except directly to {current.label}.
+            {current.requiresKey
+              ? "Claude needs your own key — there's no free tier for it yet."
+              : "Optional — SceneSpeak works out of the box on a shared free tier."}{" "}
+            Add your own key for unlimited use. Keys are stored only in your
+            browser and sent only with your own requests.
           </p>
 
           <input

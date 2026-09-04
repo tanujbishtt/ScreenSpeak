@@ -5,6 +5,8 @@ import { readSSE } from "../sse"
 
 const MODEL = "claude-sonnet-5"
 
+// Claude has no default server key (you only gave us Gemini + OpenAI keys),
+// so this one still requires the user's own key.
 export async function askClaude({ apiKey, imageUrl, history, requestScore, tone, onDelta }) {
   if (!apiKey) throw new Error("No Claude API key set")
 
@@ -23,13 +25,9 @@ export async function askClaude({ apiKey, imageUrl, history, requestScore, tone,
     return { role: turn.role === "assistant" ? "assistant" : "user", content }
   })
 
-  const response = await fetch("/api/claude/v1/messages", {
+  const response = await fetch("/api/claude", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-    },
+    headers: { "Content-Type": "application/json", "x-user-key": apiKey },
     body: JSON.stringify({ model: MODEL, system: systemText, max_tokens: 1024, messages, stream: true }),
   })
 
