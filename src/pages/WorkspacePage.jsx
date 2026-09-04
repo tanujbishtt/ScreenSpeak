@@ -21,6 +21,7 @@ import AchievementToast from "../components/workspace/AchievementToast";
 import { uploadToCloudinary } from "../lib/uploadToCloudinary";
 import { stripScoreBlockForDisplay } from "../lib/extractScore";
 import ThemeToggle from "../components/layout/ThemeToggle";
+import FreeTierNoticeGate from "../components/workspace/FreeTierNoticeGate";
 
 export default function WorkspacePage() {
   const { provider, apiKey } = useAiSettings();
@@ -314,6 +315,7 @@ export default function WorkspacePage() {
 
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden bg-cream">
+      <FreeTierNoticeGate />
       <div className="relative z-50 flex h-14 shrink-0 items-center border-b-2 border-ink bg-cream px-4">
         <div className="flex flex-1 items-center">
           <Link
