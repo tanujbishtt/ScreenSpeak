@@ -60,7 +60,7 @@ export default function Navbar() {
           <ThemeToggle />
 
           <a
-            href="https://github.com/tanujbishtt/ScreenSpeak"
+            href="https://github.com/tanujbishtt/SceneSpeak"
             target="_blank"
             rel="noopener noreferrer"
             className="hidden items-center gap-1.5 rounded-full border-2 border-ink bg-cream-surface px-3 py-1.5 font-display text-sm font-medium text-ink shadow-brutal-sm transition-all hover:-translate-y-0.5 sm:flex"

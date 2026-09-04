@@ -40,8 +40,8 @@ built this to actually get better at describing stuff in English without the bor
 ## 🚀 running this locally
 
 ```bash
-git clone https://github.com/tanujbishtt/ScreenSpeak.git
-cd ScreenSpeak
+git clone https://github.com/tanujbishtt/SceneSpeak.git
+cd SceneSpeak
 npm install
 npm run dev
 ```
